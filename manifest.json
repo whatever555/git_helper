@@ -3,7 +3,8 @@
     "description": "Find issues in Git",
     "version": "2.0",
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "storage"
     ],
     "background": {
         "scripts": ["background.js", "jquery.js"],
