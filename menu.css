@@ -15,6 +15,10 @@
     position: relative;
 }
 
+.gitlint-message {
+    color: orangered;
+}
+
 #jsonData {
     width: 100%;
     height: auto;

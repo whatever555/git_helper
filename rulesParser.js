@@ -46,16 +46,15 @@ $(document).ready(function(){
                 $('#jsonData').val(pretty);
             }
             catch (e) {
-                console.log(jsonData);
-                showMessage("Invalid JSON3");
+                showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
                 return false;
             }
             return true;
         }else{
             setTimeout(function() {
-                showMessage('Linting....')
+                showMessage('Linting....');
                 mainFunction();
-            }, 200)
+            }, 500)
         }
     }
     $('body').on('click', 'a', function(){
@@ -103,7 +102,7 @@ $(document).ready(function(){
             jsonDataTemp = JSON.parse($('#jsonData').val());
             return applyJson(jsonDataTemp);
         } catch (e) {
-            showMessage("Invalid JSON1");
+            showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
             return false;
         }
     }
@@ -114,14 +113,14 @@ $(document).ready(function(){
         try {
             loaded = runLinter(jsonData);
         } catch (e) {
-            showMessage("JSON not formatted correctly");
+            showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
             console.log("There is an issue with your JSON file");
             return false;
         } finally {
             setTimeout(function(){
                 if (!loaded)
                 {
-                    showMessage('There is a problem with your rules.json file. Please fix and refresh this page before running again');
+                    showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
                     return false;
                 }
             }, 1000);
@@ -130,9 +129,9 @@ $(document).ready(function(){
         return true;
     }
 
-    function showMessage(message, append=false){
-        if (!append){removeMessages();}
-        $('.gh-header-title').append("<a target='_blank' href='https://github.com/whatever555/git_helper#support'><b style='color:orange' class='gitlint-message'>"+message+"</b></a>");
+    function showMessage(message, extraClass=''){
+        removeMessages();
+        $('.gh-header-title').append("<span class='gitlint-message "+extraClass+"'>"+message+"</span>");
     }
 
     function removeMessages(){
@@ -188,7 +187,7 @@ $(document).ready(function(){
                 });
             }
             else{
-                showMessage("Invalid JSON2");
+                showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
                 console.log('failed test');
             }
         } catch (e) {
@@ -230,11 +229,11 @@ $(document).ready(function(){
             // link to first error if exists
             if (errorCount > 0)
             {
-                showMessage('['+errorCount+' issues]</b></a>');
+                showMessage('<a href="#1-added-warning">['+errorCount+' issues]</a>');
             }
             else
             {
-                showMessage('[No issues]</b>');
+                showMessage('[No issues]');
             }
 
         } catch (e) {
