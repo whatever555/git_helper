@@ -82,11 +82,8 @@ $(document).ready(function(){
     
     $('body').on('click', '#gl-actions-run', function(){
         try {
-            var jsonDataTemp = JSON.parse($('#jsonData').val());
-            chrome.storage.sync.set({"jsonDataTemp": jsonDataTemp}, function() {
-                var ok = runTest();
-                console.log("test"+ok);
-            });      
+            var ok = runTest();
+            console.log("test"+ok);
         } catch (e) {
         } 
     })
@@ -95,13 +92,11 @@ $(document).ready(function(){
         try {
             var jsonDataNew = JSON.parse($('#jsonData').val());
             
-            chrome.storage.sync.set({"jsonDataTemp": jsonDataNew}, function() {
-            });  
             if(runTest())
             {
                 chrome.storage.sync.set({"jsonData": jsonDataNew}, function() {
                     console.log("SAVED");
-                });  
+                });   
             }
             else{
                 console.log('failed test');
@@ -129,7 +124,6 @@ $(document).ready(function(){
     function setRules(rules)
     {
         console.log("RULES");
-        console.log(rules);
         try {
             // Check new lines
             $(".blob-code").each(function(elem){
