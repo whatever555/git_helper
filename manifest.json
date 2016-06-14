@@ -4,7 +4,9 @@
     "version": "2.0",
     "permissions": [
         "activeTab",
-        "storage"
+        "storage",
+        "webNavigation",
+        "*://*/*"
     ],
     "background": {
         "scripts": ["background.js", "jquery.js"],
@@ -15,17 +17,19 @@
     },
     "content_scripts": [
         {
-            "matches": ["http://*/*","https://*/*"],
-            "js": ["jquery.js"]
+            "matches": ["https://www.github.com/*","http://www.github.com/*","https://github.com/*","http://github.com/*"],
+            "js": ["jquery.js","rulesParser.js"],
+            "css": [ "menu.css", "mui.min.css"]
         }
     ],
     "icons": {
         "16": "icon16.png",
         "48": "icon48.png",
         "128": "icon128.png"
-    },  
+    },
     "web_accessible_resources": [
-        "rules.json"
+        "rules.json",
+        "menu.template.html"
     ],
     "manifest_version": 2
 }

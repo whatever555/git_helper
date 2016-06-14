@@ -1,0 +1,47 @@
+#gitHelperTab {
+    cursor: pointer;
+}
+
+.gl-added-warnings a {
+    color: white;
+    margin-left: 842px;
+    position: absolute;
+    background-color: orangered;
+    float:right;
+}
+
+.gl-added-warnings {
+    float:left;
+    position: relative;
+}
+
+#jsonData {
+    width: 100%;
+    height: auto;
+    border: none;
+    margin: 0;
+    min-height: 400px;
+    background-color: #EEEEEF;
+    color: #111100;
+    padding: 4px;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+}
+
+#gl-io-options {
+    margin-top: 4px;
+    text-align: right;
+}
+
+#gl-lint-options {
+    border-top: 1px solid #e5e5e5;
+    display: none;
+}
+
+.gl-yellow {
+    background-color: yellow!important;
+}
+
+.gl-yellow.blob-code-context {
+    background-color: #ffc!important;
+}

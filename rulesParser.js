@@ -1,96 +1,260 @@
 $(document).ready(function(){
-
     var debugX=0;
     var rules = null;
     var errorCount = 0;
     var loaded=false;
-    
-    
-function getJsonData() {
-    return chrome.extension.getURL("rules.json");
-}
+    //resetToDefault();
+    mainFunction();
+    var oldLocation = location.href;
 
-chrome.storage.sync.get('jsonData', function(items) {
-    var jsonData = items.jsonData;
-    if (jsonData) {
-        applyJson(jsonData);
-    } else {
-        jsonData = getJsonData();
-        chrome.storage.sync.set({jsonData: jsonData}, function() {
-            applyJson(jsonData);
-        });
-    }
-    function applyJson(jsonData)
-    {
-        try {
-            var jsonFile = chrome.extension.getURL("rules.json");
-            $.getJSON(jsonFile, function(response){
-               loaded=true;
-               init(response);
-            })    
-        } catch (e) {
-            console.log("There is an issue with your JSON file");
-        } finally {
-            setTimeout(function(){ 
-                if (!loaded)
-                {
-                    $('.commit-title, .toc-diff-stats, .gh-header-title').append("<a target='_blank' href='https://github.com/whatever555/git_helper#support'><b style='color:orange'>There is a problem with your rules.json file. Please fix and refresh this page before running again</b></a>");
-                }
-            }, 1000);
+     setInterval(function() {
+          if(location.href != oldLocation) {
+              console.log("ULR UPDAED");
+               // do your action
+             //  if (location.href.indexOf('files')>0){
+                   console.log($(".progress").width()+"<<<<Width"+$("body").width());
+                   if($(".progress").width() >= $("body").width())
+                   {
+                       setTimeout(reloadApp, 200);
+                       oldLocation = location.href;
+                   }
+             //  }
 
+          }
+      }, 1000); // check every second
+
+    function reloadApp(delay){
+        if($(".progress").width() >= $("body").width())
+        {
+            mainFunction();
+        }
+        else {
+            setTimeout(reloadApp, delay);
         }
     }
-});
-    
-    
-    
-    
+    function getDefaultJsonFile() {
+        return chrome.extension.getURL("rules.json");
+    }
 
+    function addJsonToTextArea(jsonData){
+        if ($( "#jsonData" ).length) {
+            try {
+                $('#jsonData').val(JSON.stringify(jsonData));
+                var ugly = $('#jsonData').val();
+                var obj = JSON.parse(ugly);
+                var pretty = JSON.stringify(obj, undefined, 4);
+                $('#jsonData').val(pretty);
+            }
+            catch (e) {
+                console.log(jsonData);
+                showMessage("Invalid JSON3");
+                return false;
+            }
+            return true;
+        }else{
+            setTimeout(function() {
+                showMessage('Linting....')
+                mainFunction();
+            }, 200)
+        }
+    }
+    $('body').on('click', 'a', function(){
+        var attr = $(this).attr('href');
+        // For some browsers, `attr` is undefined; for others,
+        // `attr` is false.  Check for both.
+        if (typeof attr !== typeof undefined && attr !== false) {
+            if($(this).attr('href') && $(this).attr('href').indexOf('files') > 0)
+            {
+                window.location = $(this).attr('href');
+            }        // ...
+        }
+    })
 
-    function init(rulesJson)
+    function mainFunction()
     {
+        if (window.location.href.indexOf("files") > 0){
+            showMessage('linting');
+            debugX=0;
+            rules = null;
+            errorCount = 0;
+            loaded=false;
+            applyUI();
+            chrome.storage.sync.get('jsonData', function(items) {
+                var jsonData = items.jsonData;
+                if (jsonData) {
+                    if (addJsonToTextArea(jsonData))
+                    applyJson(jsonData);
+                } else {
+                    jsd = getDefaultJsonFile();
+                    $.getJSON(jsd, function(result){
+                        chrome.storage.sync.set({"jsonData": result}, function() {
+                            if (addJsonToTextArea(result))
+                            applyJson(result);
+                        });
+                    });
+                }
+            });
+        }
+    }
+
+    function runTest()
+    {
+        try {
+            jsonDataTemp = JSON.parse($('#jsonData').val());
+            return applyJson(jsonDataTemp);
+        } catch (e) {
+            showMessage("Invalid JSON1");
+            return false;
+        }
+    }
+
+    function applyJson(jsonData)
+    {
+        var loaded=false;
+        try {
+            loaded = runLinter(jsonData);
+        } catch (e) {
+            showMessage("JSON not formatted correctly");
+            console.log("There is an issue with your JSON file");
+            return false;
+        } finally {
+            setTimeout(function(){
+                if (!loaded)
+                {
+                    showMessage('There is a problem with your rules.json file. Please fix and refresh this page before running again');
+                    return false;
+                }
+            }, 1000);
+        }
+
+        return true;
+    }
+
+    function showMessage(message, append=false){
+        if (!append){removeMessages();}
+        $('.gh-header-title').append("<a target='_blank' href='https://github.com/whatever555/git_helper#support'><b style='color:orange' class='gitlint-message'>"+message+"</b></a>");
+    }
+
+    function removeMessages(){
+        $('.gitlint-message').remove();
+    }
+    function loadMenuButton(){
+        $('#gitHelperTab').remove();
+        $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gitHelperTab">Git Linter</a>');
+
+        $('#gitHelperTab').on('click', function(){
+            if ($("#gl-lint-options").attr('visible')=="true")
+            {
+                $("#gl-lint-options").attr('visible',"false");
+                $('.tabnav-tabs a').removeClass('selected');
+                $(this).addClass('selected');
+                $('#gl-lint-options').slideUp();
+            } else {
+                $("#gl-lint-options").attr('visible',"true");
+                $('.tabnav-tabs a').removeClass('selected');
+                $(this).addClass('selected');
+                $('#gl-lint-options').slideDown();
+            }
+        })
+        loadMenu();
+    }
+
+    function loadMenu(){
+        $( "<div id='gl-lint-options'></div>" ).insertAfter( ".tabnav-tabs" );
+        var menuTemplate = chrome.extension.getURL("menu.template.html");
+        $('#gl-lint-options').load(menuTemplate);
+    }
+
+    $('body').on('click', '#gl-actions-run', function(){
+        try {
+            var ok = runTest();
+            if(!ok) {
+                showMessage("Could not run please check json");
+            }
+
+        } catch (e) {
+            showMessage("Could not run please check json");
+        }
+    })
+
+    $('body').on('click', '#gl-actions-save', function(){
+        try {
+            var jsonDataNew = JSON.parse($('#jsonData').val());
+
+            if(runTest())
+            {
+                chrome.storage.sync.set({"jsonData": jsonDataNew}, function() {
+                    console.log("saved");
+                });
+            }
+            else{
+                showMessage("Invalid JSON2");
+                console.log('failed test');
+            }
+        } catch (e) {
+            showMessage("Could not run please check json");
+        }
+    })
+
+    function runLinter(rulesJson)
+    {
+        errorCount = 0;
+        $('.gl-added-warnings').remove();
+        $(".blob-code").removeClass('gl-yellow');
         console.log("begin");
         rules = (rulesJson);
-        setRules(rules);
+        return setRules(rules);
         console.log('end');
+    }
+
+    function applyUI()
+    {
+        loadMenuButton();
     }
 
     function setRules(rules)
     {
-        // Check new lines
-        $(".blob-code").each(function(elem){
-            if (!$(this).hasClass('blob-code-deletion'))
-            {
-                errorMessage = hasError($(this));
-                if (errorMessage){
-                    setError($(this), errorMessage);
-                    errorCount ++;
+        console.log("RULES");
+        try {
+            // Check new lines
+            $(".blob-code").each(function(elem){
+                if (!$(this).hasClass('blob-code-deletion'))
+                {
+                    errorMessage = hasError($(this));
+                    if (errorMessage){
+                        setError($(this), errorMessage);
+                        errorCount ++;
+                    }
                 }
-            }
-        });
+            });
             // link to first error if exists
-        if (errorCount > 0)
-        {
-            $('.commit-title, .toc-diff-stats, .gh-header-title').append("<a href='#0-added-warning'><b style='color:orange'>["+errorCount+" issues]</b></a>");
+            if (errorCount > 0)
+            {
+                showMessage('['+errorCount+' issues]</b></a>');
+            }
+            else
+            {
+                showMessage('[No issues]</b>');
+            }
+
+        } catch (e) {
+            showMessage('Oops!');
+            return false;
         }
-        else
-        {
-            $('.commit-title, .toc-diff-stats, .gh-header-title').append("<b style='color:orange'>[No issues]</b>");
-        }
+        return true;
     }
 
     function hasError(elem)
     {
+
         $fileTypeElement = (elem).closest('.js-details-container').find('.user-select-contain');
         var fileName = $fileTypeElement.text();
         var fileType = $.trim(fileName.split('.').pop());
         lineText = elem.text();
         var n = '';
-
         return checkLine(lineText, fileType);
 
     }
-
 
     function checkLine(lineText, fileType)
     {
@@ -167,11 +331,13 @@ chrome.storage.sync.get('jsonData', function(items) {
                         }
                     }
                 }
-            
+
             } catch (e) {
+                showMessage('There was a problem with the following rule: '+rule);
                 console.log('There was a problem with the following rule:');
                 console.table(rule);
             }
+
         }
 
         return false;
@@ -182,14 +348,33 @@ chrome.storage.sync.get('jsonData', function(items) {
     function setError(elem, message, bgCol)
     {
         bgCol = typeof bgCol !== 'undefined' ? bgCol : errorColor;
-        if(elem.hasClass('blob-code-context'))
-        {
-            bgCol = '#ffc';
-        }  
-        elem.css("background-color", bgCol);
+
+        elem.addClass("gl-"+bgCol);
         elem.attr("title", message);
-        elem.append('<span style="float: right; background-color: orangered;" id="'+(errorCount)+'-added-warning"><a href="#'+(errorCount+1)+'-added-warning" style="color: white">next</a></span>');
+        elem.append('<span id="'+(errorCount)+'-added-warning" class="gl-added-warnings"><a href="#'+(errorCount+1)+'-added-warning">next</a></span>');
         return true;
     }
+
+    function resetToDefault(){
+        var keys = ["jsonData", "jsonDataTemp"];
+        try {
+            chrome.storage.sync.remove(keys);
+        } catch (e) {
+            showMessage("Could not restore to default");
+        }
+    }
+
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+
+      for (key in changes) {
+        var storageChange = changes[key];
+        console.log('Storage key "%s" in namespace "%s" changed. ' +
+                    'Old value was "%s", new value is "%s".',
+                    key,
+                    namespace,
+                    JSON.stringify(storageChange.oldValue),
+                    JSON.stringify(storageChange.newValue));
+      }
+    });
 
 })
