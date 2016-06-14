@@ -101,13 +101,11 @@ $(document).ready(function(){
             chrome.storage.sync.get('jsonData', function(items) {
                 var jsonData = items.jsonData;
                 if (jsonData) {
-                    if (addJsonToTextArea(jsonData))
                     applyJson(jsonData);
                 } else {
                     jsd = getDefaultJsonFile();
                     $.getJSON(jsd, function(result){
                         chrome.storage.sync.set({"jsonData": result}, function() {
-                            if (addJsonToTextArea(result))
                             applyJson(result);
                         });
                     });
@@ -169,6 +167,12 @@ $(document).ready(function(){
                 $(this).addClass('selected');
                 $('#gl-lint-options').slideUp();
             } else {
+                chrome.storage.sync.get('jsonData', function(items) {
+                    var jsonData = items.jsonData;
+                    if (jsonData) {
+                        addJsonToTextArea(jsonData);
+                    }
+                });
                 $("#gl-lint-options").attr('visible',"true");
                 $('.tabnav-tabs a').removeClass('selected');
                 $(this).addClass('selected');
