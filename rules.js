@@ -5,7 +5,8 @@ $(document).ready(function(){
     var errorCount = 0;
 
     // Check new lines
-    $(".blob-code-addition").each(function(elem){
+    $("#files_bucket .blob-code").each(function(elem){
+        console.log("checking");
         if (hasError($(this))){
             errorCount ++;
         }

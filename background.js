@@ -6,6 +6,6 @@
 chrome.browserAction.onClicked.addListener(function(tab) {
   // No tabs or host permissions needed!
   chrome.tabs.executeScript({
-    file: "rules.js"
+    file: "rulesParser.js"
   });
 });
