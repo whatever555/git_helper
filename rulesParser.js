@@ -144,7 +144,17 @@ $(document).ready(function(){
             else
             {
                 showMessage('[No issues]</b>');
-            }
+            }  chrome.storage.onChanged.addListener(function(changes, namespace) {
+        for (key in changes) {
+          var storageChange = changes[key];
+          console.log('Storage key "%s" in namespace "%s" changed. ' +
+                      'Old value was "%s", new value is "%s".',
+                      key,
+                      namespace,
+                      storageChange.oldValue,
+                      storageChange.newValue);
+        }
+      });
         
         } catch (e) {
             return false;
@@ -243,7 +253,17 @@ $(document).ready(function(){
             } catch (e) {
                 console.log('There was a problem with the following rule:');
                 console.table(rule);
-            }
+            }  chrome.storage.onChanged.addListener(function(changes, namespace) {
+        for (key in changes) {
+          var storageChange = changes[key];
+          console.log('Storage key "%s" in namespace "%s" changed. ' +
+                      'Old value was "%s", new value is "%s".',
+                      key,
+                      namespace,
+                      storageChange.oldValue,
+                      storageChange.newValue);
+        }
+      });
         }
 
         return false;
@@ -268,5 +288,17 @@ $(document).ready(function(){
         } catch (e) {
         }
     }
+    
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+      for (key in changes) {
+        var storageChange = changes[key];
+        console.log('Storage key "%s" in namespace "%s" changed. ' +
+                    'Old value was "%s", new value is "%s".',
+                    key,
+                    namespace,
+                    JSON.stringify(storageChange.oldValue),
+                    JSON.stringify(storageChange.newValue));
+      }
+    });
 
 })
