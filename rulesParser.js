@@ -12,16 +12,13 @@ $(document).ready(function(){
         }else{
             disabled = false;
         }
-        console.log(disabled+ "<<DISABLED");
          mainFunction();
          var oldLocation = location.href;
          setInterval(function() {
              if(!disabled){
               if(location.href != oldLocation) {
-                  console.log("ULR UPDAED");
                    // do your action
                  //  if (location.href.indexOf('files')>0){
-                       console.log($(".progress").width()+"<<<<Width"+$("body").width());
                        if($(".progress").width() >= $("body").width())
                        {
                            setTimeout(reloadApp, 200);
@@ -90,7 +87,6 @@ $(document).ready(function(){
 
     function mainFunction()
     {
-        console.log("dis"+disabled);
         if (!disabled && window.location.href.indexOf("files") > 0){
             showMessage('linting');
             debugX=0;
@@ -132,7 +128,6 @@ $(document).ready(function(){
             loaded = runLinter(jsonData);
         } catch (e) {
             showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
-            console.log("There is an issue with your JSON file");
             return false;
         } finally {
             setTimeout(function(){
@@ -196,14 +191,12 @@ $(document).ready(function(){
 
     $('body').on('click', '#gl-actions-enable', function(){
         chrome.storage.sync.set({"disabled": 0}, function() {
-            console.log("enabled");
             window.location=window.location.href;
         });
     });
 
     $('body').on('click', '#gl-actions-disable', function(){
         chrome.storage.sync.set({"disabled": 'yes'}, function() {
-            console.log("disabled");
             window.location=window.location.href;
         });
     });
@@ -263,7 +256,6 @@ $(document).ready(function(){
 
     function setRules(rules)
     {
-        console.log("RULES");
         try {
             // Check new lines
             $(".blob-code").each(function(elem){
@@ -383,8 +375,6 @@ $(document).ready(function(){
 
             } catch (e) {
                 showMessage('There was a problem with the following rule: '+rule);
-                console.log('There was a problem with the following rule:');
-                console.table(rule);
             }
 
         }
