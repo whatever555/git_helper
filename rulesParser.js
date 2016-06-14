@@ -4,7 +4,7 @@ $(document).ready(function(){
     var rules = null;
     var errorCount = 0;
     //https://eddiemurphy.me/git-rules/rules.json
-     $.getJSON("https://vserver-eddie/rules.json", function(response){
+     $.getJSON(chrome.extension.getURL("rules.json"), function(response){
          
            init(response);
      })
