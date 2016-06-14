@@ -15,7 +15,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*","https://*/*"],
-      "js": ["thirdParty/jquery.js"]
+      "js": ["jquery.js"]
     }
   ],
   "icons": {
