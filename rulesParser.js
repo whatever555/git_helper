@@ -3,33 +3,52 @@ $(document).ready(function(){
     var rules = null;
     var errorCount = 0;
     var loaded=false;
-    //resetToDefault();
-    mainFunction();
-    var oldLocation = location.href;
+    var disabled=false;
 
-     setInterval(function() {
-          if(location.href != oldLocation) {
-              console.log("ULR UPDAED");
-               // do your action
-             //  if (location.href.indexOf('files')>0){
-                   console.log($(".progress").width()+"<<<<Width"+$("body").width());
-                   if($(".progress").width() >= $("body").width())
-                   {
-                       setTimeout(reloadApp, 200);
-                       oldLocation = location.href;
-                   }
-             //  }
+    chrome.storage.sync.get('disabled', function(itemz) {
+        disabled = itemz.disabled;
+        if (typeof disabled !== typeof undefined && disabled !== false) {
 
-          }
-      }, 1000); // check every second
+        }else{
+            disabled = false;
+        }
+        console.log(disabled+ "<<DISABLED");
+         mainFunction();
+         var oldLocation = location.href;
+         setInterval(function() {
+             if(!disabled){
+              if(location.href != oldLocation) {
+                  console.log("ULR UPDAED");
+                   // do your action
+                 //  if (location.href.indexOf('files')>0){
+                       console.log($(".progress").width()+"<<<<Width"+$("body").width());
+                       if($(".progress").width() >= $("body").width())
+                       {
+                           setTimeout(reloadApp, 200);
+                           oldLocation = location.href;
+                       }
+                 //  }
+
+              }
+            }
+         }, 1000); // check every second
+
+         if (disabled)
+         {
+             $('#gitHelperTab').remove();
+             $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gl-actions-enable">Enable Linter</a>');
+         }
+    });
 
     function reloadApp(delay){
-        if($(".progress").width() >= $("body").width())
-        {
-            mainFunction();
-        }
-        else {
-            setTimeout(reloadApp, delay);
+        if(!disabled){
+            if($(".progress").width() >= $("body").width())
+            {
+                mainFunction();
+            }
+            else {
+                setTimeout(reloadApp, delay);
+            }
         }
     }
     function getDefaultJsonFile() {
@@ -71,7 +90,8 @@ $(document).ready(function(){
 
     function mainFunction()
     {
-        if (window.location.href.indexOf("files") > 0){
+        console.log("dis"+disabled);
+        if (!disabled && window.location.href.indexOf("files") > 0){
             showMessage('linting');
             debugX=0;
             rules = null;
@@ -159,51 +179,77 @@ $(document).ready(function(){
     }
 
     function loadMenu(){
-        $( "<div id='gl-lint-options'></div>" ).insertAfter( ".tabnav-tabs" );
+        var statusClass='enabled';
+        if(disabled)
+        {
+            statusClass='disabled';
+        }
+        $( "<div id='gl-lint-options' class='"+statusClass+"'></div>" ).insertAfter( ".tabnav-tabs" );
         var menuTemplate = chrome.extension.getURL("menu.template.html");
         $('#gl-lint-options').load(menuTemplate);
     }
 
+
+    $('body').on('click', '#gl-actions-enable', function(){
+        chrome.storage.sync.set({"disabled": 0}, function() {
+            console.log("enabled");
+            window.location=window.location.href;
+        });
+    });
+
+    $('body').on('click', '#gl-actions-disable', function(){
+        chrome.storage.sync.set({"disabled": 'yes'}, function() {
+            console.log("disabled");
+            window.location=window.location.href;
+        });
+    });
+
     $('body').on('click', '#gl-actions-run', function(){
-        try {
-            var ok = runTest();
-            if(!ok) {
+        if(!disabled){
+            try {
+                var ok = runTest();
+                if(!ok) {
+                    showMessage("Could not run please check json");
+                }
+
+            } catch (e) {
                 showMessage("Could not run please check json");
             }
-
-        } catch (e) {
-            showMessage("Could not run please check json");
         }
     })
 
     $('body').on('click', '#gl-actions-save', function(){
-        try {
-            var jsonDataNew = JSON.parse($('#jsonData').val());
+        if(!disabled){
+            try {
+                var jsonDataNew = JSON.parse($('#jsonData').val());
 
-            if(runTest())
-            {
-                chrome.storage.sync.set({"jsonData": jsonDataNew}, function() {
-                    console.log("saved");
-                });
+                if(runTest())
+                {
+                    chrome.storage.sync.set({"jsonData": jsonDataNew}, function() {
+                        console.log("saved");
+                    });
+                }
+                else{
+                    showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
+                    console.log('failed test');
+                }
+            } catch (e) {
+                showMessage("Could not run please check json");
             }
-            else{
-                showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
-                console.log('failed test');
-            }
-        } catch (e) {
-            showMessage("Could not run please check json");
         }
     })
 
     function runLinter(rulesJson)
     {
-        errorCount = 0;
-        $('.gl-added-warnings').remove();
-        $(".blob-code").removeClass('gl-yellow');
-        console.log("begin");
-        rules = (rulesJson);
-        return setRules(rules);
-        console.log('end');
+        if(!disabled){
+            errorCount = 0;
+            $('.gl-added-warnings').remove();
+            $(".blob-code").removeClass('gl-yellow');
+            console.log("begin");
+            rules = (rulesJson);
+            return setRules(rules);
+            console.log('end');
+        }
     }
 
     function applyUI()
@@ -362,18 +408,4 @@ $(document).ready(function(){
             showMessage("Could not restore to default");
         }
     }
-
-    chrome.storage.onChanged.addListener(function(changes, namespace) {
-
-      for (key in changes) {
-        var storageChange = changes[key];
-        console.log('Storage key "%s" in namespace "%s" changed. ' +
-                    'Old value was "%s", new value is "%s".',
-                    key,
-                    namespace,
-                    JSON.stringify(storageChange.oldValue),
-                    JSON.stringify(storageChange.newValue));
-      }
-    });
-
 })

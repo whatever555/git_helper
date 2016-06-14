@@ -9,6 +9,15 @@
     background-color: orangered;
     float:right;
 }
+ #gl-actions-enable {
+    cursor: pointer;
+}
+ #gl-lint-options.enabled  #gl-actions-enable {
+    display:none;
+}
+ #gl-lint-options.disabled  #gl-actions-disable {
+    display: none;
+}
 
 .gl-added-warnings {
     float:left;
