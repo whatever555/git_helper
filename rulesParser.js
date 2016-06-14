@@ -4,24 +4,48 @@ $(document).ready(function(){
     var rules = null;
     var errorCount = 0;
     var loaded=false;
-    //https://eddiemurphy.me/git-rules/rules.json
-    try {
-        var jsonFile = chrome.extension.getURL("rules.json");
-        $.getJSON(jsonFile, function(response){
-           loaded=true;
-           init(response);
-        })    
-    } catch (e) {
-        console.log("There is an issue with your JSON file");
-    } finally {
-        setTimeout(function(){ 
-            if (!loaded)
-            {
-                $('.commit-title, .toc-diff-stats, .gh-header-title').append("<a target='_blank' href='https://github.com/whatever555/git_helper#support'><b style='color:orange'>There is a problem with your rules.json file. Please fix and refresh this page before running again</b></a>");
-            }
-        }, 1000);
+    
+    
+function getJsonData() {
+    return chrome.extension.getURL("rules.json");
+}
 
+chrome.storage.sync.get('jsonData', function(items) {
+    var jsonData = items.jsonData;
+    if (jsonData) {
+        applyJson(jsonData);
+    } else {
+        jsonData = getJsonData();
+        chrome.storage.sync.set({jsonData: jsonData}, function() {
+            applyJson(jsonData);
+        });
     }
+    function applyJson(jsonData)
+    {
+        try {
+            var jsonFile = chrome.extension.getURL("rules.json");
+            $.getJSON(jsonFile, function(response){
+               loaded=true;
+               init(response);
+            })    
+        } catch (e) {
+            console.log("There is an issue with your JSON file");
+        } finally {
+            setTimeout(function(){ 
+                if (!loaded)
+                {
+                    $('.commit-title, .toc-diff-stats, .gh-header-title').append("<a target='_blank' href='https://github.com/whatever555/git_helper#support'><b style='color:orange'>There is a problem with your rules.json file. Please fix and refresh this page before running again</b></a>");
+                }
+            }, 1000);
+
+        }
+    }
+});
+    
+    
+    
+    
+
 
     function init(rulesJson)
     {
