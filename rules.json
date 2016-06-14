@@ -1,53 +1,152 @@
-{"linting":
-	[
-    	{
-	    	"languages":"php",
-	    	"rules":[
-		    	{
-		    		"match": ":getInstance",
-		    		"exceptions":["Search", "Mysql", "Html"],
-		    		"message": "Do you need to use getInstance() here?",
-		    		"type": "warning"
-		    	},{
-		    		"match": "notice(",
-		    		"exceptions":["$e->getMessage()"],
-		    		"message": "Debug?"
-		    	},{
-		    		"match": "* Copyright (c)",
-		    		"message": "Is this an out of date doclblock?"
-		    	},{
-		    		"match": "@copyright",
-		    		"message": "Is this an out of date doclblock?"
-		    	},{
-		    		"match": "<?= echo",
-		    		"message": "Remove echo"
-		    	},{
-		    		"match": "var_dump",
-		    		"message": "Debug?"
-		    	},{
-		    		"match": "PHP Version",
-		    		"message": "Is this line needed",
-		    		"ignore_caps": "true"
-		    	},{
-		    		"match": "== null",
-		    		"message": "Should this be is_null()?",
-		    		"ignore_caps": "true"
-		    	},{
-		    		"match": "!= null",
-		    		"message": "Should this be !is_null()?",
-		    		"ignore_caps": "true"
-		    	}
-	    	]
-    	},
+[
+	{
+    	"languages":["php"],
+    	"rules":[
+	    	{
+	    		"matches": [":getInstance"],
+	    		"exceptions":["Search", "Mysql", "Html", "Auth"],
+	    		"message": "Do you need to use getInstance() here?",
+	    		"type": "warning",
+	    		"check_caps": "true"
+	    	},{
+	    		"matches": ["notice("],
+	    		"exceptions":["$e->getMessage()"],
+	    		"message": "Debug?"
+	    	},{
+	    		"matches": ["dd("],
+	    		"exceptions":["$e->getMessage()","add(","edd(","udd(","odd(","idd("],
+	    		"message": "Debug?"
+	    	},{
+	    		"matches": ["@copyright", " Copyright (c)"],
+	    		"message": "Is this an out of date doclblock?",
+	    		"check_caps": "true"
+	    	},{
+	    		"matches": ["<?= echo"],
+	    		"message": "Remove echo"
+	    	},{
+	    		"matches": ["var_dump"],
+	    		"message": "Debug?"
+	    	},{
+	    		"matches": ["PHP Version"],
+	    		"message": "Is this line needed"
+	    	},
+	    	{
+	    		"matches": ["== null"],
+	    		"message": "Should this be is_null()?"
+	    	},
+	    	{
+	    		"matches": [".$", "\"\\*.\"", "\"."],
+	    		"message": "Missing space"
+	    	},
+	    	{
+	    		"regexes": ["(for \\(|else \\(|if \\(|while \\(|foreach \\()(.*){"],
+	    		"message": "Should the curly bracket be on the next line?"
+	    	},
+	    	{
+	    		"matches": ["!= null"],
+	    		"message": "Should this be !is_null()?"
+	    	},
+	    	{
+	    		"matches": [" array("],
+	    		"message": "Should this be new syntax? (i.e: '[element, element]')"
+	    	},
+	    	{
+	    		"matches": ["= \"","(\""],
+	    		"exceptions":["{$"],
+	    		"message": "Can single quotes be used here"
+	    	}
 
-    	{
-	    	"languages":"js",
-	    	"rules":[
-		    	{
-		    		"match": ":console.",
-		    		"message": "Debug?"
-		    	}
-	    	]
-    	}
-	]
-}
+    	]
+	},
+	{
+    	"languages":["js", "php"],
+    	"rules":[
+	    	{
+	    		"matches": [" , "],
+	    		"message": "Should this comma be trailing?"
+	    	}
+    	]
+	},
+	{
+    	"languages":["js"],
+    	"rules":[
+	    	{
+	    		"matches": ["console."],
+	    		"message": "Debug?"
+	    	},
+	    	{
+	    		"matches": ["alert("],
+	    		"message": "Debug?"
+	    	},
+	    	{
+	    		"matches": ["else","if (", "for (", "while (", "foreach ("],
+	    		"exceptions":["{"],
+	    		"message": "Are you missing a curly bracket on this line?"
+	    	}
+    	]
+	},
+	{
+    	"languages":["svg"],
+    	"rules":[
+	    	{
+	    		"matches": ["viewBox"],
+	    		"exceptions":["preserve"],
+	    		"message": "You will need to preserve the aspect ratio. E.g:  preserveAspectRatio=\"xMidYMid slice\""
+	    	}
+    	]
+	},
+	{
+    	"languages":["css"],
+    	"rules":[
+	    	{
+	    		"matches": ["important"],
+	    		"type": "warning",
+	    		"message": "Is this needed?"
+	    	}
+    	]
+	},
+
+	{
+    	"languages":["js", "php", "css"],
+    	"rules":[
+	    	{
+	    		"matches": ["if(", "while(", "for(", "foreach("],
+	    		"message": "Missing a space before opening bracket"
+	    	},
+	    	{
+	    		"matches": ["){", "else{"],
+	    		"message": "Missing a space or line before opening curly bracket"
+	    	},
+	    	{
+	    		"matches": [";;"],
+	    		"message": "Are two semi-colons needed here?"
+	    	},
+	    	{
+	    		"regexes": ["/[A-Z][&*\\>\\<|=!][A-Z]/"],
+	    		"message": "Conditional Missing Space"
+	    	},
+	    	{
+	    		"regexes": ["[*a-z/i]{"],
+	    		"exceptions":["{$"],
+	    		"message": "Missing Space?"
+	    	},
+	    	{
+	    		"regexes": ["/\\/\\/\\S/"],
+	    		"message": "Comment Missing Space after slashes",
+	    		"exceptions": "http"
+	    	},
+	    	{
+	    		"regexes": ["/\\/\\/\\s[a-z]/"],
+	    		"message": "Comment first word should have uppercase letter"
+	    	},
+	    	{
+	    		"regexes": ["/[\\/][\\*][A-Z/i]/"],
+	    		"message": "Comment Missing Space after slash star (/*)"
+	    	},
+	    	{
+	    		"regexes": ["/\\s\\*\\@/"],
+	    		"message": "Missing space in docblock?"
+	    	}
+    	]
+	}
+]
