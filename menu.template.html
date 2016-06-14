@@ -1,0 +1,44 @@
+<hr/>
+<a href="#" class="btn btn-sm" role="button" tabindex="0"
+    <span class="js-select-button">
+        Disable Git Linter
+    </span>
+</a>
+<br/>
+<br/>
+<div class="file-header">Editable regex JSON rules</div>
+<textarea id='jsonData' name='jsonData' value='loading...' spellcheck="false">
+</textarea>
+
+<div id='gl-io-options'>
+    <a href="#" class="btn btn-sm" role="button" tabindex="0" id="gl-actions-run"
+        <span class="js-select-button">
+            Run
+        </span>
+    </a>
+    <a href="#" class="btn btn-sm" role="button" tabindex="0" id="gl-actions-save"
+        <span class="js-select-button">
+            Run &amp; Save
+        </span>
+    </a>
+</div>
+<br/>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var jsonFile = chrome.extension.getURL("rules.json");
+            $.getJSON(jsonFile, function(response){
+            $('#jsonData').val(JSON.stringify(response));
+            
+            var ugly = document.getElementById('jsonData').value;
+            var obj = JSON.parse(ugly);
+            var pretty = JSON.stringify(obj, undefined, 4);
+            document.getElementById('jsonData').value = pretty;
+        })   
+        
+        var currentT=1;
+        $('#jsonData').on('keyup', function(){
+            $('gl-saveButton').addClass('enabled');
+        });
+    })
+</script>

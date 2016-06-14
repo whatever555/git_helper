@@ -15,8 +15,9 @@
     },
     "content_scripts": [
         {
-            "matches": ["http://*/*","https://*/*"],
-            "js": ["jquery.js"]
+            "matches": ["https://www.github.com/*","http://www.github.com/*","https://github.com/*","http://github.com/*"],
+            "js": ["jquery.js"],
+            "css": [ "menu.css", "mui.min.css"]
         }
     ],
     "icons": {
@@ -25,7 +26,8 @@
         "128": "icon128.png"
     },  
     "web_accessible_resources": [
-        "rules.json"
+        "rules.json",
+        "menu.template.html"
     ],
     "manifest_version": 2
 }
