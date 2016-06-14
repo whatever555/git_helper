@@ -3,11 +3,25 @@ $(document).ready(function(){
     var debugX=0;
     var rules = null;
     var errorCount = 0;
+    var loaded=false;
     //https://eddiemurphy.me/git-rules/rules.json
-     $.getJSON(chrome.extension.getURL("rules.json"), function(response){
-         
+    try {
+        var jsonFile = chrome.extension.getURL("rules.json");
+        $.getJSON(jsonFile, function(response){
+           loaded=true;
            init(response);
-     })
+        })    
+    } catch (e) {
+        console.log("There is an issue with your JSON file");
+    } finally {
+        setTimeout(function(){ 
+            if (!loaded)
+            {
+                $('.commit-title, .toc-diff-stats, .gh-header-title').append("<a target='_blank' href='https://github.com/whatever555/git_helper#support'><b style='color:orange'>There is a problem with your rules.json file. Please fix and refresh this page before running again</b></a>");
+            }
+        }, 1000);
+
+    }
 
     function init(rulesJson)
     {
@@ -77,55 +91,62 @@ $(document).ready(function(){
     {
         for (j in rulesForLanguage)
         {
-            rule = rulesForLanguage[j];
-            if (rule.matches)
+            try
             {
-                matches = rule.matches;
-                for (k in matches)
+                rule = rulesForLanguage[j];
+                if (rule.matches)
                 {
-                    if (lineText.indexOf(matches[k]) > -1)
+                    matches = rule.matches;
+                    for (k in matches)
                     {
-                        var ret = rule.message;
-                        exceptions = rule.exceptions;
-                        for (p in exceptions)
+                        if (lineText.indexOf(matches[k]) > -1)
                         {
-                            if (lineText.indexOf(exceptions[p]) > -1)
+                            var ret = rule.message;
+                            exceptions = rule.exceptions;
+                            for (p in exceptions)
                             {
-                                ret = false;;
+                                if (lineText.indexOf(exceptions[p]) > -1)
+                                {
+                                    ret = false;;
+                                }
                             }
-                        }
-                        if(ret)
-                        {
-                            return rule.message;
+                            if(ret)
+                            {
+                                return rule.message;
+                            }
                         }
                     }
                 }
-            }
 
-            if (rule.regexes)
-            {
-                regexes = rule.regexes;
-                for (r in regexes)
+                if (rule.regexes)
                 {
-                    var reg = new RegExp(regexes[r]);
-                    var regMatches = lineText.match(reg);
-                    if (regMatches)
+                    regexes = rule.regexes;
+                    for (r in regexes)
                     {
-                        var ret = rule.message;
-                        exceptions = rule.exceptions;
-                        for (p in exceptions)
+                        var reg = new RegExp(regexes[r]);
+                        var regMatches = lineText.match(reg);
+                        if (regMatches)
                         {
-                            if (lineText.indexOf(exceptions[p]) > -1)
+                            var ret = rule.message;
+                            exceptions = rule.exceptions;
+                            for (p in exceptions)
                             {
-                                ret = false;;
+                                if (lineText.indexOf(exceptions[p]) > -1)
+                                {
+                                    ret = false;;
+                                }
                             }
-                        }
-                        if(ret)
-                        {
-                            return rule.message;
+                            if(ret)
+                            {
+                                return rule.message;
+                            }
                         }
                     }
                 }
+            
+            } catch (e) {
+                console.log('There was a problem with the following rule:');
+                console.table(rule);
             }
         }
 

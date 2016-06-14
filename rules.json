@@ -3,7 +3,7 @@
     	"languages":["php"],
     	"rules":[
 	    	{
-	    		"matches": [":getInstance"],
+	    		"matches": [":getInstance\"],
 	    		"exceptions":["Search", "Mysql", "Html", "Auth"],
 	    		"message": "Do you need to use getInstance() here?",
 	    		"type": "warning",
