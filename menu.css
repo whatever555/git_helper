@@ -9,6 +9,13 @@
     background-color: orangered;
     float:right;
 }
+
+.left{
+    float:left;
+}
+.right{
+    float:right;
+}
  #gl-actions-enable {
     cursor: pointer;
 }

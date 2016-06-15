@@ -189,15 +189,19 @@ $(document).ready(function(){
     }
 
 
-    $('body').on('click', '#gl-actions-enable', function(){
-        chrome.storage.sync.set({"disabled": 0}, function() {
-            window.location=window.location.href;
+        $('body').on('click', '#gl-actions-reset', function(){
+                resetToDefault();
+                window.location.reload(true);
         });
-    });
+            $('body').on('click', '#gl-actions-enable', function(){
+                chrome.storage.sync.set({"disabled": 0}, function() {
+                    window.location.reload(true);
+                });
+            });
 
     $('body').on('click', '#gl-actions-disable', function(){
         chrome.storage.sync.set({"disabled": 'yes'}, function() {
-            window.location=window.location.href;
+            window.location.reload(true);
         });
     });
 
