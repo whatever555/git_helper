@@ -5,6 +5,7 @@ $(document).ready(function(){
     var loaded=false;
     var disabled=false;
     var appName = "Git helper";
+    var quiteMode=false;
     chrome.storage.sync.get('disabled', function(itemz) {
         disabled = itemz.disabled;
         if (typeof disabled !== typeof undefined && disabled !== false) {
@@ -50,6 +51,13 @@ $(document).ready(function(){
     }
     function getDefaultJsonFile() {
         return chrome.extension.getURL("simple.rules.json");
+    }
+
+    function resetJsonDataToDefault(){
+        jsd = getDefaultJsonFile();
+        $.getJSON(jsd, function(result){
+            addJsonToTextArea(result);
+        });
     }
 
     function addJsonToTextArea(jsonData){
@@ -102,7 +110,6 @@ $(document).ready(function(){
     })
 
     $('body').on('keyup', '#gl-json-data-textarea',function(){
-        console.log('werwe');
         if($('#gl-actions-save').attr('disabled') == 'disabled')
         {
             chrome.storage.sync.get('jsonData', function(items) {
@@ -184,10 +191,13 @@ $(document).ready(function(){
     }
 
     function showMessage(message, extraClass='', append=false){
-        if(!append)
-        removeMessages();
-        $('.gh-header-title').append("<span class='gitlint-message "+extraClass+"'>"+message+"</span>");
-        toastMessage(message);
+        if(!quiteMode)
+        {
+            if(!append)
+            removeMessages();
+            $('.gh-header-title').append("<span class='gitlint-message "+extraClass+"'>"+message+"</span>");
+            toastMessage(message);
+        }
     }
 
     function removeMessages(){
@@ -234,11 +244,15 @@ $(document).ready(function(){
 
 
         $('body').on('click', '#gl-actions-reset', function(){
-                if (window.confirm("Warning\nThis will overwrite all of your current JSON rules\nAre you sure you want to continue?")) {
+                if (window.confirm("Warning\n\nAre you sure you want to change json back to default?")) {
 
-                    showMessage("Resetting json file to default");
-                    resetToDefault();
-                    window.location.reload(true);
+                    showMessage("Resetting json to default. You will still need to save your changes.");
+                    resetJsonDataToDefault();
+
+                    $('#gl-actions-save').attr('disabled', false);
+                    $('#gl-actions-cancel').attr('disabled', false);
+                    //resetToDefault();
+                    //window.location.reload(true);
                 }
         });
             $('body').on('click', '#gl-actions-enable', function(){
@@ -274,6 +288,7 @@ $(document).ready(function(){
         if(!disabled){
             try {
                 var jsonDataNew = JSON.parse($('#gl-json-data-textarea').val());
+                quiteMode = true;
                 if(runTest())
                 {
                     chrome.storage.sync.set({"jsonData": jsonDataNew}, function() {
@@ -284,11 +299,16 @@ $(document).ready(function(){
                     });
                 }
                 else{
+                    quiteMode = false;
                     showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
                     console.log('failed test');
                 }
             } catch (e) {
+                quiteMode = false;
                 showMessage("Could not run please check json");
+            }
+            finally{
+                quiteMode = false;
             }
         }
     })

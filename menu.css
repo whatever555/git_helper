@@ -90,7 +90,10 @@
     border: none!important;
     box-shadow: none!important;
 }
-
+#gl-file-header {
+    height: 47px;
+    padding: 9px 10px;
+}
 #gl-io-options {
     margin-top: -4px;
     text-align: right;
@@ -101,6 +104,7 @@
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
+    min-height: 47px;
 }
 
  #gl-io-options .gl-io-buttons {
@@ -150,11 +154,11 @@
     font-size: 16px;
 }
 .gl-toast-message.good {
-background-color: rgba(240, 250, 240, 0.83);
+background-color: rgba(240, 250, 240, 0.93);
 }
 
 .gl-toast-message.bad {
-background-color: rgba(250, 240, 220, 0.83);
+background-color: rgba(250, 240, 220, 0.93);
 }
 
 /* cyrillic-ext */
