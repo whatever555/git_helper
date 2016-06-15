@@ -11,27 +11,37 @@
 </a>
 <br/>
 <br/>
-<div class="file-header">Editable regex JSON rules</div>
-<textarea id='jsonData' name='jsonData' value='loading...' spellcheck="false">
-</textarea>
+<div id ="gl-json-data-textarea-holder">
+        
+    <div class="file-header">
+        Editable regex JSON rules
+        <a id='gl-edit-rules' class="btn-octicon tooltipped tooltipped-nw" rel="nofollow" data-skip-pjax="" aria-label="Change this file using the online editor">
+            <svg aria-hidden="true" class="octicon octicon-pencil" height="16" version="1.1" viewBox="0 0 14 16" width="14">
+                <path d="M0 12v3h3l8-8-3-3-8 8zm3 2H1v-2h1v1h1v1zm10.3-9.3L12 6 9 3l1.3-1.3a.996.996 0 0 1 1.41 0l1.59 1.59c.39.39.39 1.02 0 1.41z">
+                </path>
+            </svg>
+        </a>    
+        <a class="btn btn-sm" role="button" tabindex="0" id="gl-actions-run"
+            <span class="js-select-button">
+                Test
+            </span>
+        </a>
+    </div>
+    <textarea id='gl-json-data-textarea' name='gl-json-data-textarea' value='loading...' spellcheck="false" placeholder="loading.." disabled>
+    </textarea>
+</div>
 
-<div id='gl-io-options'>
-    <a class="btn btn-sm left" role="button" tabindex="0" id="gl-actions-reset"
-        <span class="js-select-button">
-            Reset to default
-        </span>
-    </a>
-<div id='gl-io-options'>
-    <a class="btn btn-sm" role="button" tabindex="0" id="gl-actions-run"
-        <span class="js-select-button">
-            Test run
-        </span>
-    </a>
+<div id='gl-io-options'>    
+    <button id="gl-actions-reset" class="left btn btn-danger js-comment-cancel-button" type="submit" tabindex="1" data-disable-with="">
+        Reset to default
+    </button>
+    
+    <button id="gl-actions-reset" class="btn btn-danger js-comment-cancel-button" type="submit" tabindex="1" data-disable-with="">
+        Cancel
+    </button>
     &nbsp;
-    <a class="btn btn-sm" role="button" tabindex="0" id="gl-actions-save"
-        <span class="js-select-button">
-            Run &amp; Save
-        </span>
-    </a>
+    <button id="gl-actions-save" class="btn btn-primary" type="submit" tabindex="1" data-disable-with="">
+        Run &amp; Save
+    </button>
 </div>
 <br/>

@@ -32,7 +32,7 @@ $(document).ready(function(){
 
          if (disabled)
          {
-             $('#gitHelperTab').remove();
+             $('#gl-helper-tab-button').remove();
              $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gl-actions-enable">Enable '+appName+'</a>');
          }
     });
@@ -53,13 +53,13 @@ $(document).ready(function(){
     }
 
     function addJsonToTextArea(jsonData){
-        if ($( "#jsonData" ).length) {
+        if ($( "#gl-json-data-textarea" ).length) {
             try {
-                $('#jsonData').val(JSON.stringify(jsonData));
-                var ugly = $('#jsonData').val();
+                $('#gl-json-data-textarea').val(JSON.stringify(jsonData));
+                var ugly = $('#gl-json-data-textarea').val();
                 var obj = JSON.parse(ugly);
                 var pretty = JSON.stringify(obj, undefined, 4);
-                $('#jsonData').val(pretty);
+                $('#gl-json-data-textarea').val(pretty);
             }
             catch (e) {
                 showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
@@ -78,16 +78,30 @@ $(document).ready(function(){
         // For some browsers, `attr` is undefined; for others,
         // `attr` is false.  Check for both.
         if (typeof attr !== typeof undefined && attr !== false) {
-            if($(this).attr('href') && $(this).attr('href').indexOf('files') > 0)
+            if($(this).attr('href') && ($(this).attr('href').indexOf('files') > 0 || $(this).attr('href').indexOf('compare') > 0  ))
             {
                 window.location = $(this).attr('href');
             }        // ...
         }
     })
+    $('body').on('click', '#gl-edit-rules', function(){
+        console.log($('#gl-json-data-textarea').attr('disabled'));
+        if ($('#gl-json-data-textarea').attr('disabled') == 'disabled')
+        {
+            $('#gl-json-data-textarea').attr('disabled',false);
+            $('#gl-json-data-textarea-holder').addClass('editable');
+            $(this).addClass('selected');
+        }
+        else {
+            $('#gl-json-data-textarea').attr('disabled','disabled');
+            $('#gl-json-data-textarea-holder').removeClass('editable');
+            $(this).removeClass('selected');
+        }
+    })
 
     function mainFunction()
     {
-        if (!disabled && window.location.href.indexOf("files") > 0){
+        if (!disabled && (window.location.href.indexOf("files") > 0 || window.location.href.indexOf("compare") > 0)){
             showMessage('linting');
             debugX=0;
             rules = null;
@@ -113,7 +127,7 @@ $(document).ready(function(){
     function runTest()
     {
         try {
-            jsonDataTemp = JSON.parse($('#jsonData').val());
+            jsonDataTemp = JSON.parse($('#gl-json-data-textarea').val());
             return applyJson(jsonDataTemp);
         } catch (e) {
             showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
@@ -152,10 +166,10 @@ $(document).ready(function(){
         $('.gitlint-message').remove();
     }
     function loadMenuButton(){
-        $('#gitHelperTab').remove();
-        $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gitHelperTab">'+appName+'</a>');
+        $('#gl-helper-tab-button').remove();
+        $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gl-helper-tab-button">'+appName+'</a>');
 
-        $('body').on('click', '#gitHelperTab', function(){
+        $('body').on('click', '#gl-helper-tab-button', function(){
             if ($("#gl-lint-options").attr('visible')=="true")
             {
                 $("#gl-lint-options").attr('visible',"false");
@@ -163,6 +177,7 @@ $(document).ready(function(){
                 $(this).addClass('selected');
                 $('#gl-lint-options').slideUp();
             } else {
+                console.log('nothit');
                 chrome.storage.sync.get('jsonData', function(items) {
                     var jsonData = items.jsonData;
                     if (jsonData) {
@@ -226,7 +241,7 @@ $(document).ready(function(){
     $('body').on('click', '#gl-actions-save', function(){
         if(!disabled){
             try {
-                var jsonDataNew = JSON.parse($('#jsonData').val());
+                var jsonDataNew = JSON.parse($('#gl-json-data-textarea').val());
                 if(runTest())
                 {
                     chrome.storage.sync.set({"jsonData": jsonDataNew}, function() {
@@ -275,7 +290,8 @@ $(document).ready(function(){
     {
         try {
             // Check new lines
-            $(".blob-code-inner .pl-s1").each(function(elem){
+            $(".blob-code-inner").each(function(elem){
+                console.log('lotta boops?');
                 if (!$(this).closest('.blob-code').hasClass('blob-code-deletion'))
                 {
                     errorMessage = hasError($(this));
@@ -288,14 +304,17 @@ $(document).ready(function(){
             // link to first error if exists
             if (errorCount > 0)
             {
+                console.log('found one');
                 showMessage('<a href="#0-added-warning">['+errorCount+' issues]</a>');
             }
             else
             {
+                console.log('found noting');
                 showMessage('[No issues]');
             }
 
         } catch (e) {
+            console.log('booooope');
             showMessage('Oops!');
             return false;
         }
@@ -309,7 +328,10 @@ $(document).ready(function(){
         var fileName = $fileTypeElement.text();
         var fileType = $.trim(fileName.split('.').pop());
         lineText = elem.text();
-        console.log(lineText);
+        if (lineText.indexOf('+')==0||lineText.indexOf('-')==0)
+        {
+            lineText=lineText.substring(1);
+        }
         var n = '';
         return checkLine(lineText, fileType);
 

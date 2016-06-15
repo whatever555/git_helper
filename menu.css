@@ -1,4 +1,4 @@
-#gitHelperTab {
+#gl-helper-tab-button {
     cursor: pointer;
 }
 
@@ -35,7 +35,29 @@
     color: orangered;
 }
 
-#jsonData {
+#gl-actions-run {
+    float: right;
+    display: inline-block;
+}
+
+#gl-edit-rules {
+    cursor: pointer;
+    float: right;
+}
+#gl-json-data-textarea-holder.editable {
+    background-color: #FCFCFC;
+}
+#gl-json-data-textarea-holder {
+    border: 1px solid #e5e5e5;
+    width: 100%;
+    background-color: #EEEEEF;
+}
+
+#gl-edit-rules.selected {
+    background-color: lightgrey;
+}
+
+#gl-json-data-textarea {
     width: 100%;
     height: auto;
     border: none;
@@ -46,6 +68,14 @@
     padding: 4px;
     font-family: 'Arial', sans-serif;
     font-size: 12px;
+}
+.editable #gl-json-data-textarea {
+    background-color: #FEFEFE;
+}
+#gl-json-data-textarea:focus {
+    outline: none !important;
+    border: none!important;
+    box-shadow: none!important;
 }
 
 #gl-io-options {
