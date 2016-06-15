@@ -29,6 +29,7 @@
     },
     "web_accessible_resources": [
         "rules.json",
+        "simple.rules.json",
         "menu.template.html"
     ],
     "manifest_version": 2

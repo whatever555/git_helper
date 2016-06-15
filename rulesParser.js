@@ -49,7 +49,7 @@ $(document).ready(function(){
         }
     }
     function getDefaultJsonFile() {
-        return chrome.extension.getURL("rules.json");
+        return chrome.extension.getURL("simple.rules.json");
     }
 
     function addJsonToTextArea(jsonData){
