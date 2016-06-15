@@ -154,7 +154,7 @@ $(document).ready(function(){
         $('#gitHelperTab').remove();
         $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gitHelperTab">Git Linter</a>');
 
-        $('#gitHelperTab').on('click', function(){
+        $('body').on('click', '#gitHelperTab' function(){
             if ($("#gl-lint-options").attr('visible')=="true")
             {
                 $("#gl-lint-options").attr('visible',"false");
