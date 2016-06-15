@@ -154,7 +154,7 @@ $(document).ready(function(){
         $('#gitHelperTab').remove();
         $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gitHelperTab">Git Linter</a>');
 
-        $('body').on('click', '#gitHelperTab' function(){
+        $('body').on('click', '#gitHelperTab', function(){
             if ($("#gl-lint-options").attr('visible')=="true")
             {
                 $("#gl-lint-options").attr('visible',"false");
@@ -275,7 +275,7 @@ $(document).ready(function(){
             // link to first error if exists
             if (errorCount > 0)
             {
-                showMessage('<a href="#1-added-warning">['+errorCount+' issues]</a>');
+                showMessage('<a href="#0-added-warning">['+errorCount+' issues]</a>');
             }
             else
             {
