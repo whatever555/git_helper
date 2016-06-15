@@ -24,6 +24,7 @@
 }
  #gl-lint-options.disabled  #gl-actions-disable {
     display: none;
+    margin-right: 4px;
 }
 
 .gl-added-warnings {
@@ -35,9 +36,15 @@
     color: orangered;
 }
 
+.gl-header {
+    display: inline-block;
+    margin-top: 4px;
+}
+
 #gl-actions-run {
     float: right;
     display: inline-block;
+    margin-left: 5px;
 }
 
 #gl-edit-rules {
