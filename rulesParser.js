@@ -275,8 +275,8 @@ $(document).ready(function(){
     {
         try {
             // Check new lines
-            $(".blob-code").each(function(elem){
-                if (!$(this).hasClass('blob-code-deletion'))
+            $(".blob-code-inner .pl-s1").each(function(elem){
+                if (!$(this).closest('.blob-code').hasClass('blob-code-deletion'))
                 {
                     errorMessage = hasError($(this));
                     if (errorMessage){
@@ -309,6 +309,7 @@ $(document).ready(function(){
         var fileName = $fileTypeElement.text();
         var fileType = $.trim(fileName.split('.').pop());
         lineText = elem.text();
+        console.log(lineText);
         var n = '';
         return checkLine(lineText, fileType);
 
@@ -356,6 +357,16 @@ $(document).ready(function(){
                                     ret = false;;
                                 }
                             }
+                            regex_exceptions = rule.regex_exceptions;
+                            for (p in regex_exceptions)
+                            {
+                                var regexep = new RegExp(regex_exceptions[r]);
+                                var regexepMatches = lineText.match(regexep);
+                                if (regexepMatches)
+                                {
+                                    ret = false;
+                                }
+                            }
                             if(ret)
                             {
                                 return rule.message;
@@ -382,6 +393,16 @@ $(document).ready(function(){
                                     ret = false;;
                                 }
                             }
+                            regex_exceptions = rule.regex_exceptions;
+                            for (p in regex_exceptions)
+                            {
+                                var regexep = new RegExp(regex_exceptions[r]);
+                                var regexepMatches = lineText.match(regexep);
+                                if (regexepMatches)
+                                {
+                                    ret = false;
+                                }
+                            }
                             if(ret)
                             {
                                 return rule.message;
@@ -405,9 +426,9 @@ $(document).ready(function(){
     {
         bgCol = typeof bgCol !== 'undefined' ? bgCol : errorColor;
 
-        elem.addClass("gl-"+bgCol);
-        elem.attr("title", message);
-        elem.append('<span id="'+(errorCount)+'-added-warning" class="gl-added-warnings"><a href="#'+(errorCount+1)+'-added-warning">next</a></span>');
+        elem.closest('.blob-code').addClass("gl-"+bgCol);
+        elem.closest('.blob-code').attr("title", message);
+        elem.closest('.blob-code').append('<span id="'+(errorCount)+'-added-warning" class="gl-added-warnings"><a href="#'+(errorCount+1)+'-added-warning">next</a></span>');
         return true;
     }
 

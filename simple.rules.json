@@ -15,7 +15,7 @@
 	    	},
             {
 	    		"regexes": ["class "],
-	    		"exceptions":["([A-Z][a-z0-9]+)"],
+	    		"regex_exceptions":["/\\sclass /"],
 	    		"message": "Should this class name be in camelCase?"
 	    	}
     	]
@@ -46,7 +46,7 @@
 	    		"message": "Are you missing a curly bracket on this line?"
 	    	}
     	]
-	}
+	},
 	{
     	"languages":["css"],
     	"rules":[
