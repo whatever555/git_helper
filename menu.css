@@ -33,7 +33,8 @@
 }
 
 .gitlint-message {
-    color: orangered;
+    font-size: 18px;
+    color: #151508;
 }
 
 .gl-header {
@@ -72,9 +73,14 @@
     min-height: 400px;
     background-color: #EEEEEF;
     color: #111100;
-    padding: 4px;
+    padding: 8px;
     font-family: 'Arial', sans-serif;
     font-size: 12px;
+
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
 }
 .editable #gl-json-data-textarea {
     background-color: #FEFEFE;
@@ -86,14 +92,26 @@
 }
 
 #gl-io-options {
-    margin-top: 4px;
+    margin-top: -4px;
     text-align: right;
+    border: 1px solid #e5e5e5;
+    border-top: 2px solid #e5e5e5;
+    background-color: #f7f7f7;
+    padding: 5px;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+ #gl-io-options .gl-io-buttons {
+    display: none;
 }
 
 #gl-lint-options {
     border-top: 1px solid #e5e5e5;
     display: none;
 }
+
 
 .gl-yellow {
     background-color: yellow!important;
@@ -103,27 +121,40 @@
     background-color: #ffc!important;
 }
 .gl-toast-message {
-    width: 50%;
-    height: 50px;
+    -webkit-box-shadow: 0px 4px 4px -2px rgba(0,0,0,0.15);
+    -moz-box-shadow: 0px 4px 4px -2px rgba(0,0,0,0.15);
+    box-shadow: 0px 4px 4px -2px rgba(0,0,0,0.15);
+    width: 100%;
+    height: 24px;
+    line-height: 24px;
+    padding:14px
     display: block;
     position: fixed;
-    top: 50%;
-    margin-top: -25px;
-    margin-left: 25%;
-    background-color: rgba(255, 0, 255, 0.5);
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
+    top: 0%;
+    background-color: rgba(250, 250, 250, 0.93);
+    color: #151508;
+    font-size: 18px;
     text-align: center;
     vertical-align: middle;
+    z-index: 999;
 }
-
+.gl-toast-x {
+    float:left;
+    cursor:pointer;
+    padding: 1px;
+    margin-left: 12px;
+    font-size: 16px;
+}
+.gl-toast-count{
+    margin-right: 12px;
+    font-size: 16px;
+}
 .gl-toast-message.good {
-background-color: rgba(0, 255, 0, 0.5);
+background-color: rgba(240, 250, 240, 0.83);
 }
 
 .gl-toast-message.bad {
-background-color: rgba(255, 0, 0, 0.5);
+background-color: rgba(250, 240, 220, 0.83);
 }
 
 /* cyrillic-ext */
@@ -182,4 +213,3 @@ background-color: rgba(255, 0, 0, 0.5);
   src: local('Roboto Condensed'), local('RobotoCondensed-Regular'), url(https://fonts.gstatic.com/s/robotocondensed/v13/Zd2E9abXLFGSr9G3YK2MsDAdhzWOYhqHvOZMRGaEyPo.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
 }
-

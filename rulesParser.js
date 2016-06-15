@@ -88,15 +88,42 @@ $(document).ready(function(){
         console.log($('#gl-json-data-textarea').attr('disabled'));
         if ($('#gl-json-data-textarea').attr('disabled') == 'disabled')
         {
+            $('.gl-io-buttons').fadeIn();
             $('#gl-json-data-textarea').attr('disabled',false);
             $('#gl-json-data-textarea-holder').addClass('editable');
             $(this).addClass('selected');
         }
         else {
+            $('.gl-io-buttons').fadeOut();
             $('#gl-json-data-textarea').attr('disabled','disabled');
             $('#gl-json-data-textarea-holder').removeClass('editable');
             $(this).removeClass('selected');
         }
+    })
+
+    $('body').on('keyup', '#gl-json-data-textarea',function(){
+        console.log('werwe');
+        if($('#gl-actions-save').attr('disabled') == 'disabled')
+        {
+            chrome.storage.sync.get('jsonData', function(items) {
+                var jsonData = items.jsonData;
+                var newJson = $('#gl-json-data-textarea').val();
+                if (newJson != jsonData)
+                {
+                    $('#gl-actions-save').attr('disabled', false);
+                    $('#gl-actions-cancel').attr('disabled', false);
+                }
+            });
+        }
+    })
+
+    $('body').on('click', '#gl-actions-cancel', function(){
+        chrome.storage.sync.get('jsonData', function(items) {
+            addJsonToTextArea(items.jsonData);
+            showMessage('Changes have been cancelled');
+            $('#gl-actions-save').attr('disabled', 'disabled');
+            $('#gl-actions-cancel').attr('disabled', 'disabled');
+        });
     })
 
     function mainFunction()
@@ -160,6 +187,7 @@ $(document).ready(function(){
         if(!append)
         removeMessages();
         $('.gh-header-title').append("<span class='gitlint-message "+extraClass+"'>"+message+"</span>");
+        toastMessage(message);
     }
 
     function removeMessages(){
@@ -206,8 +234,12 @@ $(document).ready(function(){
 
 
         $('body').on('click', '#gl-actions-reset', function(){
-                resetToDefault();
-                window.location.reload(true);
+                if (window.confirm("Warning\nThis will overwrite all of your current JSON rules\nAre you sure you want to continue?")) {
+
+                    showMessage("Resetting json file to default");
+                    resetToDefault();
+                    window.location.reload(true);
+                }
         });
             $('body').on('click', '#gl-actions-enable', function(){
                 chrome.storage.sync.set({"disabled": 0}, function() {
@@ -218,7 +250,7 @@ $(document).ready(function(){
 
     $('body').on('click', '#gl-actions-disable', function(){
         chrome.storage.sync.set({"disabled": 'yes'}, function() {
-            
+
             toastMessage(appName + ' disabled', 'good');
             window.location.reload(true);
         });
@@ -246,27 +278,65 @@ $(document).ready(function(){
                 {
                     chrome.storage.sync.set({"jsonData": jsonDataNew}, function() {
                         console.log("saved");
-                        showMessage(' :: Saved', '', true);
-                        toastMessage('Json saved!', 'good');
+                        $('#gl-actions-save').attr('disabled', 'disabled');
+                        $('#gl-actions-cancel').attr('disabled', 'disabled');
+                        toastMessage('Saved', 'good');
                     });
                 }
                 else{
                     showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
                     console.log('failed test');
-                    toastMessage('Coud not save JSON. Please check formatting', 'bad');
                 }
             } catch (e) {
-                toastMessage('Coud not save JSON. Please check formatting', 'bad');
                 showMessage("Could not run please check json");
             }
         }
     })
-    
+
+    var toastMessages = [];
+    var toastRunning=false;
+    var toastInstanceID = 1;
     function toastMessage(message, extraClass='')
     {
-        $('body').append('<div class="gl-toast-message '+extraClass+'">'+message+'</div>');
-        $('.gl-toast-message').delay(1500).fadeOut();
+        toastMessages.push([message,extraClass]);
+        if(toastRunning==false){
+            toastInstanceID++;
+            runToast(toastInstanceID);
+        }else{
+            $('.gl-toast-count').html('['+toastMessages.length+']');
+        }
     }
+
+    function runToast(td){
+        if(td == toastInstanceID){
+            toastRunning=true;
+            var delayTime=1750;
+            if(toastMessages.length>0)
+            {
+                data=toastMessages.shift();
+                message=data[0];
+                extraClass=data[1];
+                extraHTML='<span class="gl-toast-count right"></span>';
+                if(toastMessages.length>0)
+                {
+                    extraHTML = '<span class="gl-toast-count right">['+toastMessages.length+']</span>';
+                }
+                $('body').append('<div class="gl-toast-message '+extraClass+'">'+message+extraHTML+'<span class="gl-toast-x">X</span></div>');
+                $('.gl-toast-message').show();
+                $('.gl-toast-message').delay(delayTime).fadeOut();
+                setTimeout(function() { runToast(td); }, delayTime);
+            }
+            else {
+                toastRunning=false;
+            }
+        }
+    }
+
+    $('body').on('click','.gl-toast-x',function(){
+        $('.gl-toast-message').fadeOut();
+        toastInstanceID++;
+        runToast(toastInstanceID);
+    })
 
     function runLinter(rulesJson)
     {
@@ -291,7 +361,6 @@ $(document).ready(function(){
         try {
             // Check new lines
             $(".blob-code-inner").each(function(elem){
-                console.log('lotta boops?');
                 if (!$(this).closest('.blob-code').hasClass('blob-code-deletion'))
                 {
                     errorMessage = hasError($(this));
@@ -304,17 +373,14 @@ $(document).ready(function(){
             // link to first error if exists
             if (errorCount > 0)
             {
-                console.log('found one');
-                showMessage('<a href="#0-added-warning">['+errorCount+' issues]</a>');
+                showMessage('<a href="#0-added-warning">'+errorCount+' issues found in this PR</a>');
             }
             else
             {
-                console.log('found noting');
-                showMessage('[No issues]');
+                showMessage('No issues found in PR');
             }
 
         } catch (e) {
-            console.log('booooope');
             showMessage('Oops!');
             return false;
         }
@@ -323,7 +389,6 @@ $(document).ready(function(){
 
     function hasError(elem)
     {
-
         $fileTypeElement = (elem).closest('.js-details-container').find('.user-select-contain');
         var fileName = $fileTypeElement.text();
         var fileType = $.trim(fileName.split('.').pop());
