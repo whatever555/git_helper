@@ -4,7 +4,7 @@ $(document).ready(function(){
     var errorCount = 0;
     var loaded=false;
     var disabled=false;
-
+    var appName = "Git helper";
     chrome.storage.sync.get('disabled', function(itemz) {
         disabled = itemz.disabled;
         if (typeof disabled !== typeof undefined && disabled !== false) {
@@ -33,7 +33,7 @@ $(document).ready(function(){
          if (disabled)
          {
              $('#gitHelperTab').remove();
-             $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gl-actions-enable">Enable Linter</a>');
+             $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gl-actions-enable">Enable '+appName+'</a>');
          }
     });
 
@@ -142,7 +142,8 @@ $(document).ready(function(){
         return true;
     }
 
-    function showMessage(message, extraClass=''){
+    function showMessage(message, extraClass='', append=false){
+        if(!append)
         removeMessages();
         $('.gh-header-title').append("<span class='gitlint-message "+extraClass+"'>"+message+"</span>");
     }
@@ -152,7 +153,7 @@ $(document).ready(function(){
     }
     function loadMenuButton(){
         $('#gitHelperTab').remove();
-        $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gitHelperTab">Git Linter</a>');
+        $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gitHelperTab">'+appName+'</a>');
 
         $('body').on('click', '#gitHelperTab', function(){
             if ($("#gl-lint-options").attr('visible')=="true")
@@ -195,12 +196,15 @@ $(document).ready(function(){
         });
             $('body').on('click', '#gl-actions-enable', function(){
                 chrome.storage.sync.set({"disabled": 0}, function() {
+                toastMessage(appName + ' enabled', 'good');
                     window.location.reload(true);
                 });
             });
 
     $('body').on('click', '#gl-actions-disable', function(){
         chrome.storage.sync.set({"disabled": 'yes'}, function() {
+            
+            toastMessage(appName + ' disabled', 'good');
             window.location.reload(true);
         });
     });
@@ -223,22 +227,31 @@ $(document).ready(function(){
         if(!disabled){
             try {
                 var jsonDataNew = JSON.parse($('#jsonData').val());
-
                 if(runTest())
                 {
                     chrome.storage.sync.set({"jsonData": jsonDataNew}, function() {
                         console.log("saved");
+                        showMessage(' :: Saved', '', true);
+                        toastMessage('Json saved!', 'good');
                     });
                 }
                 else{
                     showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
                     console.log('failed test');
+                    toastMessage('Coud not save JSON. Please check formatting', 'bad');
                 }
             } catch (e) {
+                toastMessage('Coud not save JSON. Please check formatting', 'bad');
                 showMessage("Could not run please check json");
             }
         }
     })
+    
+    function toastMessage(message, extraClass='')
+    {
+        $('body').append('<div class="gl-toast-message '+extraClass+'">'+message+'</div>');
+        $('.gl-toast-message').delay(1500).fadeOut();
+    }
 
     function runLinter(rulesJson)
     {
