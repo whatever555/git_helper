@@ -125,6 +125,14 @@
     min-height: 49px;
 }
 
+.gl-icon-image.small
+{
+    margin-top: -3.4px!important;
+}
+.gl-icon-image
+{
+    margin-top: -5px;
+}
  #gl-io-options .gl-io-buttons {
     display: none;
 }

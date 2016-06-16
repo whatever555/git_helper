@@ -1,7 +1,7 @@
 {
     "name": "Git Helper",
     "description": "Find issues in Git",
-    "version": "2.1",
+    "version": "2.2",
     "permissions": [
         "activeTab",
         "storage",
@@ -30,7 +30,9 @@
     "web_accessible_resources": [
         "rules.json",
         "simple.rules.json",
-        "menu.template.html"
+        "menu.template.html",
+        "icon16.png",
+        "icon48.png"
     ],
     "manifest_version": 2
 }
