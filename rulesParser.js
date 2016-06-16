@@ -98,6 +98,7 @@ $(document).ready(function(){
         }
     })
     $('body').on('click', '#gl-edit-rules', function(){
+        console.log('BANG');
         console.log($('#gl-json-data-textarea').attr('disabled'));
         if ($('#gl-json-data-textarea').attr('disabled') == 'disabled')
         {
