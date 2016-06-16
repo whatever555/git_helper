@@ -9,7 +9,8 @@ div.numberedtextarea-wrapper textarea {
 }
 
 div.numberedtextarea-line-numbers {
- background-color: #EAEAEA;
+  padding-top: 7px!important;
+  background-color: #EAEAEA;
   position: absolute;
   top: 0;
   left: 0;

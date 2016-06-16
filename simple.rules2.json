@@ -1,0 +1,77 @@
+[
+	{
+    	"languages":["php"],
+    	"rules":[
+	    	{
+	    		"matches": ["This is bad code"],
+	    		"exceptions":["Unless this text is on the same line", "or this text"],
+	    		"message": "This message will be displayed if the above rules are met",
+	    		"type": "warning",
+	    		"check_caps": "false"
+	    	},
+            {
+	    		"matches": ["var_dump("],
+	    		"message": "Debug?"
+	    	},
+            {
+	    		"regexes": ["class "],
+	    		"regex_exceptions":["/\\sclass /"],
+	    		"message": "Should this class name be in camelCase?"
+	    	}
+    	]
+	},
+	{
+    	"languages":["js", "php"],
+    	"rules":[
+	    	{
+	    		"matches": [" , "],
+	    		"message": "Should this comma be trailing?"
+	    	}
+    	]
+	},
+	{
+    	"languages":["js"],
+    	"rules":[
+	    	{
+	    		"matches": ["console."],
+	    		"message": "Debug?"
+	    	},
+	    	{
+	    		"matches": ["alert("],
+	    		"message": "Debug?"
+	    	},
+	    	{
+	    		"matches": ["else","if (", "for (", "while (", "foreach ("],
+	    		"exceptions":["{"],
+	    		"message": "Are you missing a curly bracket on this line?"
+	    	}
+    	]
+	},
+	{
+    	"languages":["css"],
+    	"rules":[
+	    	{
+	    		"matches": ["!important"],
+	    		"type": "warning",
+	    		"message": "Is this important tag needed?"
+	    	}
+    	]
+	},
+	{
+    	"languages":["js", "php", "css"],
+    	"rules":[
+	    	{
+	    		"regexes": ["/\\/\\/\\s[a-z]/"],
+	    		"message": "Comments should being with uppercase letter"
+	    	},
+	    	{
+	    		"regexes": ["/[\\/][\\*][A-Z/i]/"],
+	    		"message": "Comment Missing Space after slash star (/*)"
+	    	},
+	    	{
+	    		"regexes": ["/\\s\\*\\@/"],
+	    		"message": "Missing space in docblock?"
+	    	}
+    	]
+	}
+]

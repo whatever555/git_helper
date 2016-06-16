@@ -3,21 +3,59 @@
     	"languages":["php"],
     	"rules":[
 	    	{
-	    		"matches": ["This is bad code"],
-	    		"exceptions":["Unless this text is on the same line", "or this text"],
-	    		"message": "This message will be displayed if the above rules are met",
+	    		"matches": [":getInstance"],
+	    		"exceptions":["Search", "Mysql", "Html", "Auth"],
+	    		"message": "Do you need to use getInstance() here?",
 	    		"type": "warning",
-	    		"check_caps": "false"
-	    	},
-            {
-	    		"matches": ["var_dump("],
+	    		"check_caps": "true"
+	    	},{
+	    		"matches": ["notice("],
+	    		"exceptions":["$e->getMessage()"],
 	    		"message": "Debug?"
+	    	},{
+	    		"matches": ["dd("],
+	    		"exceptions":["$e->getMessage()","add(","edd(","udd(","odd(","idd("],
+	    		"message": "Debug?"
+	    	},{
+	    		"matches": ["@copyright", " Copyright (c)"],
+	    		"message": "Is this an out of date doclblock?",
+	    		"check_caps": "true"
+	    	},{
+	    		"matches": ["<?= echo"],
+	    		"message": "Remove echo"
+	    	},{
+	    		"matches": ["var_dump"],
+	    		"message": "Debug?"
+	    	},{
+	    		"matches": ["PHP Version"],
+	    		"message": "Is this line needed"
 	    	},
-            {
-	    		"regexes": ["class "],
-	    		"regex_exceptions":["/\\sclass /"],
-	    		"message": "Should this class name be in camelCase?"
+	    	{
+	    		"matches": ["== null"],
+	    		"message": "Should this be is_null()?"
+	    	},
+	    	{
+	    		"matches": [".$", "\"\\*.\"", "\"."],
+	    		"message": "Missing space"
+	    	},
+	    	{
+	    		"regexes": ["(for \\(|else \\(|if \\(|while \\(|foreach \\()(.*){"],
+	    		"message": "Should the curly bracket be on the next line?"
+	    	},
+	    	{
+	    		"matches": ["!= null"],
+	    		"message": "Should this be !is_null()?"
+	    	},
+	    	{
+	    		"matches": [" array("],
+	    		"message": "Should this be new syntax? (i.e: '[element, element]')"
+	    	},
+	    	{
+	    		"matches": ["= \"","(\""],
+	    		"exceptions":["{$"],
+	    		"message": "Can single quotes be used here"
 	    	}
+
     	]
 	},
 	{
@@ -48,21 +86,58 @@
     	]
 	},
 	{
-    	"languages":["css"],
+    	"languages":["svg"],
     	"rules":[
 	    	{
-	    		"matches": ["!important"],
-	    		"type": "warning",
-	    		"message": "Is this important tag needed?"
+	    		"matches": ["viewBox"],
+	    		"exceptions":["preserve"],
+	    		"message": "You will need to preserve the aspect ratio. E.g:  preserveAspectRatio=\"xMidYMid slice\""
 	    	}
     	]
 	},
 	{
+    	"languages":["css"],
+    	"rules":[
+	    	{
+	    		"matches": ["important"],
+	    		"type": "warning",
+	    		"message": "Is this needed?"
+	    	}
+    	]
+	},
+
+	{
     	"languages":["js", "php", "css"],
     	"rules":[
 	    	{
+	    		"matches": ["if(", "while(", "for(", "foreach("],
+	    		"message": "Missing a space before opening bracket"
+	    	},
+	    	{
+	    		"matches": ["){", "else{"],
+	    		"message": "Missing a space or line before opening curly bracket"
+	    	},
+	    	{
+	    		"matches": [";;"],
+	    		"message": "Are two semi-colons needed here?"
+	    	},
+	    	{
+	    		"regexes": ["/[A-Z][&*\\>\\<|=!][A-Z]/"],
+	    		"message": "Conditional Missing Space"
+	    	},
+	    	{
+	    		"regexes": ["[*a-z/i]{"],
+	    		"exceptions":["{$"],
+	    		"message": "Missing Space?"
+	    	},
+	    	{
+	    		"regexes": ["/\\/\\/\\S/"],
+	    		"message": "Comment Missing Space after slashes",
+	    		"exceptions": "http"
+	    	},
+	    	{
 	    		"regexes": ["/\\/\\/\\s[a-z]/"],
-	    		"message": "Comments should being with uppercase letter"
+	    		"message": "Comment first word should have uppercase letter"
 	    	},
 	    	{
 	    		"regexes": ["/[\\/][\\*][A-Z/i]/"],
