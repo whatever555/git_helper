@@ -33,9 +33,12 @@
 }
 
 .gitlint-message {
-    margin-top: 8px;
-    font-size: 20px;
+    font-size: 16px;
     color: #151508;
+    padding: 6px;
+    border-top: 1px solid #e5e5e5;
+    width: 100%;
+    padding-bottom: 3px;
 }
 
 .gl-svg {
@@ -149,7 +152,7 @@
     top: 0%;
     background-color: rgba(250, 250, 250, 0.93);
     color: #151508;
-    font-size: 18px;
+    font-size: 16px;
     text-align: center;
     vertical-align: middle;
     z-index: 999;
