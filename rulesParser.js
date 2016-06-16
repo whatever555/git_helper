@@ -92,10 +92,13 @@ $(document).ready(function(){
         var attr = $(this).attr('href');
         // For some browsers, `attr` is undefined; for others,
         // `attr` is false.  Check for both.
+
         if (typeof attr !== typeof undefined && attr !== false) {
             if($(this).attr('href') && ($(this).attr('href').indexOf('files') > 0 || $(this).attr('href').indexOf('compare') > 0  ))
-            {
-                window.location = $(this).attr('href');
+            {        
+                if ($("#gl-lint-options").length)
+                $("#gl-lint-options").hide();
+                mainFunction();
             }        // ...
         }
     })
@@ -142,6 +145,9 @@ $(document).ready(function(){
 
     function mainFunction()
     {
+        if ($("#gl-lint-options").length)
+        $("#gl-lint-options").remove();
+        
         if (!disabled && (window.location.href.indexOf("files") > 0 || window.location.href.indexOf("compare") > 0)){
             showMessage('Checking...');
             debugX=0;
@@ -224,6 +230,8 @@ $(document).ready(function(){
     $('body').on('click', '#gl-helper-tab-button', function(){
         showHideUI();
     })
+    
+    
 
 
 function showHideUI(){
@@ -249,6 +257,9 @@ function showHideUI(){
     }
 }
     function loadMenu(){
+        if ($('#gl-lint-options'),length){
+            $('#gl-lint-options').remove();
+        }
         var statusClass='enabled';
         if(disabled)
         {
