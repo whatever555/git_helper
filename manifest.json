@@ -18,8 +18,8 @@
     "content_scripts": [
         {
             "matches": ["https://www.github.com/*","http://www.github.com/*","https://github.com/*","http://github.com/*"],
-            "js": ["jquery.js","rulesParser.js", "jquery-linedtextarea.js"],
-            "css": [ "menu.css", "mui.min.css", "jquery-linedtextarea.css"]
+            "js": ["jquery.js","rulesParser.js", "jquery.numberedtextarea.js"],
+            "css": [ "menu.css", "mui.min.css", "jquery.numberedtextarea.css"]
         }
     ],
     "icons": {

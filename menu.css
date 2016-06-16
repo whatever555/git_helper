@@ -74,6 +74,7 @@
     background-color: #EEEEEF;
     color: #111100;
     padding: 8px;
+    padding-left:0px;
     font-family: 'Arial', sans-serif;
     font-size: 12px;
 
@@ -81,6 +82,10 @@
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
+}
+
+.numberedtextarea-number {
+    border: 1px solid #ddd;
 }
 .editable #gl-json-data-textarea {
     background-color: #FEFEFE;
@@ -94,6 +99,7 @@
     height: 47px;
     padding: 9px 10px;
 }
+
 #gl-io-options {
     margin-top: -4px;
     text-align: right;

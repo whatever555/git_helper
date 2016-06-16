@@ -6,6 +6,7 @@ $(document).ready(function(){
     var disabled=false;
     var appName = "Git helper";
     var quiteMode=false;
+    var lineNumbersSet=false;
     chrome.storage.sync.get('disabled', function(itemz) {
         disabled = itemz.disabled;
         if (typeof disabled !== typeof undefined && disabled !== false) {
@@ -73,6 +74,10 @@ $(document).ready(function(){
                 showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
                 return false;
             }
+            if(!lineNumbersSet){
+                lineNumbersSet=true;
+                $("#gl-json-data-textarea").numberedtextarea();
+            }
             return true;
         }else{
             setTimeout(function() {
@@ -100,6 +105,7 @@ $(document).ready(function(){
             $('#gl-json-data-textarea').attr('disabled',false);
             $('#gl-json-data-textarea-holder').addClass('editable');
             $(this).addClass('selected');
+
         }
         else {
             $('.gl-io-buttons').fadeOut();
