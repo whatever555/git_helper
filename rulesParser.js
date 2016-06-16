@@ -96,9 +96,7 @@ $(document).ready(function(){
         if (typeof attr !== typeof undefined && attr !== false) {
             if($(this).attr('href') && ($(this).attr('href').indexOf('files') > 0 || $(this).attr('href').indexOf('compare') > 0  ))
             {        
-                if ($("#gl-lint-options").length)
-                $("#gl-lint-options").hide();
-                mainFunction();
+                window.location.reload(false);
             }        // ...
         }
     })
@@ -147,27 +145,36 @@ $(document).ready(function(){
     {
         if ($("#gl-lint-options").length)
         $("#gl-lint-options").remove();
-        
-        if (!disabled && (window.location.href.indexOf("files") > 0 || window.location.href.indexOf("compare") > 0)){
-            showMessage('Checking...');
+        if (!disabled && (window.location.href.indexOf("pull/") > 0 || window.location.href.indexOf("compare") > 0)){
+            
             debugX=0;
             rules = null;
             errorCount = 0;
             loaded=false;
-            applyUI();
-            chrome.storage.sync.get('jsonData', function(items) {
-                var jsonData = items.jsonData;
-                if (jsonData) {
-                    applyJson(jsonData);
-                } else {
-                    jsd = getDefaultJsonFile();
-                    $.getJSON(jsd, function(result){
-                        chrome.storage.sync.set({"jsonData": result}, function() {
-                            applyJson(result);
-                        });
-                    });
+            applyUI(window.location.href.indexOf("files") > 0);
+            
+            if (window.location.href.indexOf("files") > 0)
+            {
+                showMessage('Checking...');
+                loadMenu();
+                if (window.location.href.split('?')[1] == 'gl-show')
+                {
+                    showHideUI();
                 }
-            });
+                chrome.storage.sync.get('jsonData', function(items) {
+                    var jsonData = items.jsonData;
+                    if (jsonData) {
+                        applyJson(jsonData);
+                    } else {
+                        jsd = getDefaultJsonFile();
+                        $.getJSON(jsd, function(result){
+                            chrome.storage.sync.set({"jsonData": result}, function() {
+                                applyJson(result);
+                            });
+                        });
+                    }
+                });
+            }
         }
     }
 
@@ -217,15 +224,17 @@ $(document).ready(function(){
     function removeMessages(){
         $('.gitlint-message').remove();
     }
-    function loadMenuButton(){
+    function loadMenuButton(noLink=true){
+        var link = '';
+        if (!noLink)
+            link='href = "'+window.location.href.split('?')[0].replace('/commits','')+'/files?gl-show"';
         if(('#gl-helper-tab-button').length)
         {
             $('#gl-helper-tab-button').remove();
         }
         var svgCode='<svg aria-hidden="true" class="octicon octicon-mark-github gl-svg" height="14" version="1.1" viewBox="0 0 16 16" width="14"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>';
-        $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gl-helper-tab-button">'+svgCode+appName+'</a>');
+        $('.tabnav-tabs').append('<a '+link+' class="tabnav-tab js-pjax-history-navigate" id="gl-helper-tab-button">'+svgCode+appName+'</a>');
         
-        loadMenu();
     }
     
     $('body').on('click', '#gl-helper-tab-button', function(){
@@ -236,7 +245,6 @@ $(document).ready(function(){
 
 
 function showHideUI(){
-
     $tabBut=$('#gl-helper-tab-button');
     if ($("#gl-lint-options").attr('visible')=="true")
     {
@@ -399,9 +407,9 @@ function showHideUI(){
         }
     }
 
-    function applyUI()
+    function applyUI(noLink=true)
     {
-        loadMenuButton();
+        loadMenuButton(noLink);
     }
 
     function setRules(rules)
