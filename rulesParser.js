@@ -211,33 +211,48 @@ $(document).ready(function(){
         $('.gitlint-message').remove();
     }
     function loadMenuButton(){
-        $('#gl-helper-tab-button').remove();
+        if$('#gl-helper-tab-button').length)
+        {
+            $('#gl-helper-tab-button').remove();
+        }
         $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gl-helper-tab-button">'+appName+'</a>');
-
-        $('body').on('click', '#gl-helper-tab-button', function(){
-            if ($("#gl-lint-options").attr('visible')=="true")
-            {
-                $("#gl-lint-options").attr('visible',"false");
-                $('.tabnav-tabs a').removeClass('selected');
-                $(this).addClass('selected');
-                $('#gl-lint-options').slideUp();
-            } else {
-                console.log('nothit');
-                chrome.storage.sync.get('jsonData', function(items) {
-                    var jsonData = items.jsonData;
-                    if (jsonData) {
-                        addJsonToTextArea(jsonData);
-                    }
-                });
-                $("#gl-lint-options").attr('visible',"true");
-                $('.tabnav-tabs a').removeClass('selected');
-                $(this).addClass('selected');
-                $('#gl-lint-options').slideDown();
-            }
-        })
+        
+        showHideUI();
         loadMenu();
     }
+    
+    $('body').on('click', '#gl-helper-tab-button', function(){
+            showHideUI();
+    })
 
+
+function showHideUI(){
+
+    $tabBut=$('#gl-helper-tab-button');
+    if ($("#gl-lint-options").attr('visible')=="true")
+    {
+        console.log('yesthit');
+        $("#gl-lint-options").attr('visible',"false");
+        $('.tabnav-tabs a').removeClass('selected');
+        $tabBut.addClass('selected');
+        $('#gl-lint-options').slideUp();
+    } else {
+        console.log('nothit');
+        chrome.storage.sync.get('jsonData', function(items) {
+            console.log('GETTING');
+            var jsonData = items.jsonData;
+            if (jsonData) {
+                console.log('GOT');
+                addJsonToTextArea(jsonData);
+            }else{console.log('not got');}
+        });
+        $("#gl-lint-options").attr('visible',"true");
+        $('.tabnav-tabs a').removeClass('selected');
+        $tabBut.addClass('selected');
+        console.log($("#gl-lint-options").attr('visible')+'ADDED');
+        $('#gl-lint-options').slideDown();
+    }
+}
     function loadMenu(){
         var statusClass='enabled';
         if(disabled)
