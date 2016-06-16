@@ -38,6 +38,10 @@
     color: #151508;
 }
 
+.gl-svg {
+    margin-right: 3px;
+}
+
 .gl-header {
     display: inline-block;
     margin-top: 4px;
