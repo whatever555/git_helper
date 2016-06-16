@@ -39,10 +39,13 @@
     border-top: 1px solid #e5e5e5;
     width: 100%;
     padding-bottom: 3px;
+    line-height: 40px;
 }
 
 .gl-svg {
     margin-right: 3px;
+    fill: #550000!important;
+    fill: yellow;
 }
 
 .gl-header {
@@ -115,7 +118,7 @@
     border-top: 2px solid #e5e5e5;
     background-color: #f7f7f7;
     padding: 5px;
-    padding-top: 4px;
+    padding-top: 10px;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
