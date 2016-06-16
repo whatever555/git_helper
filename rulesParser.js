@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    $.ajaxSetup({ cache: false });
     var debugX=0;
     var rules = null;
     var errorCount = 0;
@@ -51,7 +52,8 @@ $(document).ready(function(){
         }
     }
     function getDefaultJsonFile() {
-        return chrome.extension.getURL("simple.rules.json");
+        console.log("url: "+chrome.extension.getURL("simple.rules.json")+"?"+makeRandomId);
+        return chrome.extension.getURL("simple.rules.json")+"?"+makeRandomId;
     }
 
     function resetJsonDataToDefault(){
@@ -98,8 +100,6 @@ $(document).ready(function(){
         }
     })
     $('body').on('click', '#gl-edit-rules', function(){
-        console.log('BANG');
-        console.log($('#gl-json-data-textarea').attr('disabled'));
         if ($('#gl-json-data-textarea').attr('disabled') == 'disabled')
         {
             $('.gl-io-buttons').fadeIn();
@@ -197,12 +197,13 @@ $(document).ready(function(){
         return true;
     }
 
-    function showMessage(message, extraClass='', append=false){
+    function showMessage(message, extraClass='', append=false, noToast=false){
         if(!quiteMode)
         {
             if(!append)
             removeMessages();
-            $('.gh-header-title').append("<span class='gitlint-message "+extraClass+"'>"+message+"</span>");
+            $('.gh-header-title').append("<div class='gitlint-message "+extraClass+"'>Git helper: "+message+"</div>");
+            if(!noToast)
             toastMessage(message);
         }
     }
@@ -211,18 +212,17 @@ $(document).ready(function(){
         $('.gitlint-message').remove();
     }
     function loadMenuButton(){
-        if$('#gl-helper-tab-button').length)
+        if(('#gl-helper-tab-button').length)
         {
             $('#gl-helper-tab-button').remove();
         }
         $('.tabnav-tabs').append('<a class="tabnav-tab js-pjax-history-navigate" id="gl-helper-tab-button">'+appName+'</a>');
         
-        showHideUI();
         loadMenu();
     }
     
     $('body').on('click', '#gl-helper-tab-button', function(){
-            showHideUI();
+        showHideUI();
     })
 
 
@@ -231,25 +231,20 @@ function showHideUI(){
     $tabBut=$('#gl-helper-tab-button');
     if ($("#gl-lint-options").attr('visible')=="true")
     {
-        console.log('yesthit');
         $("#gl-lint-options").attr('visible',"false");
         $('.tabnav-tabs a').removeClass('selected');
         $tabBut.addClass('selected');
         $('#gl-lint-options').slideUp();
     } else {
-        console.log('nothit');
         chrome.storage.sync.get('jsonData', function(items) {
-            console.log('GETTING');
             var jsonData = items.jsonData;
             if (jsonData) {
-                console.log('GOT');
                 addJsonToTextArea(jsonData);
-            }else{console.log('not got');}
+            }
         });
         $("#gl-lint-options").attr('visible',"true");
         $('.tabnav-tabs a').removeClass('selected');
         $tabBut.addClass('selected');
-        console.log($("#gl-lint-options").attr('visible')+'ADDED');
         $('#gl-lint-options').slideDown();
     }
 }
@@ -267,8 +262,7 @@ function showHideUI(){
 
         $('body').on('click', '#gl-actions-reset', function(){
                 if (window.confirm("Warning\n\nAre you sure you want to change json back to default?")) {
-
-                    showMessage("Resetting json to default. You will still need to save your changes.");
+                    toastMessage("Resetting json to default. You will still need to save your changes.");
                     resetJsonDataToDefault();
 
                     $('#gl-actions-save').attr('disabled', false);
@@ -412,15 +406,18 @@ function showHideUI(){
                     }
                 }
             });
+            var tmpQuiteMode=quiteMode;
+            quiteMode=false;
             // link to first error if exists
             if (errorCount > 0)
             {
-                showMessage('<a href="#0-added-warning">'+errorCount+' issues found in this PR</a>');
+                showMessage('<a href="#0-added-warning">'+errorCount+' issues found in this PR</a>','',false, tmpQuiteMode);
             }
             else
             {
-                showMessage('No issues found in PR');
+                showMessage('No issues found in PR','',false, tmpQuiteMode);
             }
+            quiteMode=tmpQuiteMode;
 
         } catch (e) {
             showMessage('Oops!');
@@ -569,4 +566,16 @@ function showHideUI(){
             showMessage("Could not restore to default");
         }
     }
+    
+    function makeRandomId()
+    {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( var i=0; i < 8; i++ )
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
+
 })
