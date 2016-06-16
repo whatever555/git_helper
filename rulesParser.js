@@ -81,7 +81,7 @@ $(document).ready(function(){
             return true;
         }else{
             setTimeout(function() {
-                showMessage('Linting....');
+                showMessage('Checking....');
                 mainFunction();
             }, 500)
         }
@@ -143,7 +143,7 @@ $(document).ready(function(){
     function mainFunction()
     {
         if (!disabled && (window.location.href.indexOf("files") > 0 || window.location.href.indexOf("compare") > 0)){
-            showMessage('linting');
+            showMessage('Checking...');
             debugX=0;
             rules = null;
             errorCount = 0;
