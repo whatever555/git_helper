@@ -258,7 +258,7 @@ function showHideUI(){
     {
         $("#gl-lint-options").attr('visible',"false");
         $('.tabnav-tabs a').removeClass('selected');
-        $tabBut.addClass('selected');
+        $tabBut.removeClass('selected');
         $('#gl-lint-options').slideUp();
     } else {
         chrome.storage.sync.get('jsonData', function(items) {
