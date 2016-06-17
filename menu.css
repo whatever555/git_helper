@@ -132,6 +132,8 @@
 .gl-icon-image
 {
     margin-top: -5px;
+    margin-right: 3px;
+    margin-left: -4px;
 }
  #gl-io-options .gl-io-buttons {
     display: none;
