@@ -1,7 +1,7 @@
 {
     "name": "Git Helper",
     "description": "Find issues in Git",
-    "version": "2.2",
+    "version": "2.22",
     "permissions": [
         "activeTab",
         "storage",
