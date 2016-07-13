@@ -140,13 +140,24 @@ $(document).ready(function(){
             $('#gl-actions-cancel').attr('disabled', 'disabled');
         });
     })
+    
+    $('body').on('click', '#run-anyway', function(){
+        mainFunction(true);
+    })
 
-    function mainFunction()
+    function mainFunction(ignoreFileLimit = false)
     {
         if ($("#gl-lint-options").length)
         $("#gl-lint-options").remove();
         if (!disabled && (window.location.href.indexOf("pull/") > 0 || window.location.href.indexOf("compare") > 0)){
-
+        
+            var fileLimitReached = false;
+            var fileCount = parseInt($('#files_tab_counter').html());
+            if (fileCount > 50)
+            {
+                fileLimitReached= true;
+            }
+            
             debugX=0;
             rules = null;
             errorCount = 0;
@@ -161,19 +172,24 @@ $(document).ready(function(){
                 {
                     showHideUI();
                 }
-                chrome.storage.sync.get('jsonData', function(items) {
-                    var jsonData = items.jsonData;
-                    if (jsonData) {
-                        applyJson(jsonData);
-                    } else {
-                        jsd = getDefaultJsonFile();
-                        $.getJSON(jsd, function(result){
-                            chrome.storage.sync.set({"jsonData": result}, function() {
-                                applyJson(result);
+                if (fileLimitReached && !ignoreFileLimit) {
+                    showMessage('Too many files for github helper to work with (still just beta!) <span id="run-anyway">Run anyway?</span>', 'bad');
+                }
+                else {
+                    chrome.storage.sync.get('jsonData', function(items) {
+                        var jsonData = items.jsonData;
+                        if (jsonData) {
+                            applyJson(jsonData);
+                        } else {
+                            jsd = getDefaultJsonFile();
+                            $.getJSON(jsd, function(result){
+                                chrome.storage.sync.set({"jsonData": result}, function() {
+                                    applyJson(result);
+                                });
                             });
-                        });
-                    }
-                });
+                        }
+                    });
+                }
             }
         }
     }
@@ -224,7 +240,7 @@ $(document).ready(function(){
 
             $('.gitlint-message').html(iconCode+appName+": "+message+"");
             if(!noToast)
-                toastMessage(message);
+                toastMessage(message, extraClass);
         }else {
             $('.gitlint-message').remove();
         }

@@ -182,11 +182,24 @@
     font-size: 16px;
 }
 .gl-toast-message.good {
-background-color: rgba(240, 250, 240, 0.93);
+background-color: rgba(80, 200, 80, 0.93);
+color: white;
+font-weight: bold;
 }
 
 .gl-toast-message.bad {
-background-color: rgba(250, 240, 220, 0.93);
+background-color: rgba(200, 80, 80, 0.93);
+color: white;
+font-weight: bold;
+}
+
+#run-anyway {
+    color: black;
+    font-weight: bold;
+    background-color: rgba(250, 170, 20, 0.93);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 3px;
 }
 
 /* cyrillic-ext */
