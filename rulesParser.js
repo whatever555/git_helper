@@ -53,7 +53,6 @@ $(document).ready(function(){
         }
     }
     function getDefaultJsonFile() {
-        console.log("url: "+chrome.extension.getURL("simple.rules.json")+"?"+makeRandomId);
         return chrome.extension.getURL("simple.rules.json")+"?"+makeRandomId;
     }
 
@@ -352,7 +351,6 @@ function showHideUI(){
                 if(runTest())
                 {
                     chrome.storage.sync.set({"jsonData": jsonDataNew}, function() {
-                        console.log("saved");
                         $('#gl-actions-save').attr('disabled', 'disabled');
                         $('#gl-actions-cancel').attr('disabled', 'disabled');
                         toastMessage('Saved', 'good');
@@ -361,7 +359,7 @@ function showHideUI(){
                 else{
                     quiteMode = false;
                     showMessage("Invalid JSON. Try fixing it <a href='http://jsonlint.com/' target='_blank'>here</a>");
-                    console.log('failed test');
+                    
                 }
             } catch (e) {
                 quiteMode = false;
@@ -424,10 +422,8 @@ function showHideUI(){
             errorCount = 0;
             $('.gl-added-warnings').remove();
             $(".blob-code").removeClass('gl-yellow');
-            console.log("begin");
             rules = (rulesJson);
             return setRules(rules);
-            console.log('end');
         }
     }
 
