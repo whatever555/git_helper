@@ -3,67 +3,32 @@
     	"languages":["php"],
     	"rules":[
 	    	{
-	    		"matches": [":getInstance"],
-	    		"exceptions":["Search", "Mysql", "Html", "Auth"],
-	    		"message": "Do you need to use getInstance() here?",
-	    		"type": "warning",
-	    		"check_caps": "true"
-	    	},{
 	    		"matches": ["notice("],
 	    		"exceptions":["$e->getMessage()"],
 	    		"message": "Debug?"
 	    	},{
-	    		"matches": ["dd("],
-	    		"exceptions":["$e->getMessage()","add(","edd(","udd(","odd(","idd("],
-	    		"message": "Debug?"
-	    	},{
-	    		"matches": ["@copyright", " Copyright (c)"],
-	    		"message": "Is this an out of date doclblock?",
-	    		"check_caps": "true"
-	    	},{
 	    		"matches": ["<?= echo"],
-	    		"message": "Remove echo"
-	    	},{
-	    		"matches": ["var_dump"],
-	    		"message": "Debug?"
-	    	},{
-	    		"matches": ["PHP Version"],
-	    		"message": "Is this line needed"
-	    	},
-	    	{
-	    		"matches": ["== null"],
-	    		"message": "Should this be is_null()?"
-	    	},
-	    	{
-	    		"matches": [".$", "\"\\*.\"", "\"."],
-	    		"message": "Missing space"
-	    	},
-	    	{
-	    		"regexes": ["(for \\(|else \\(|if \\(|while \\(|foreach \\()(.*){"],
-	    		"message": "Should the curly bracket be on the next line?"
-	    	},
-	    	{
-	    		"matches": ["!= null"],
-	    		"message": "Should this be !is_null()?"
-	    	},
-	    	{
-	    		"matches": [" array("],
-	    		"message": "Should this be new syntax? (i.e: '[element, element]')"
-	    	},
-	    	{
-	    		"matches": ["= \"","(\""],
-	    		"exceptions":["{$"],
-	    		"message": "Can single quotes be used here"
+	    		"message": "'echo' not needed here"
 	    	}
 
     	]
 	},
 	{
-    	"languages":["js", "php"],
+    	"languages":["js", "php", "java"],
     	"rules":[
 	    	{
 	    		"matches": [" , "],
-	    		"message": "Should this comma be trailing?"
+	    		"message": "Is this comma trailing?"
+	    	}
+    	]
+	},
+	{
+    	"languages":["java"],
+    	"rules":[
+	    	{
+	    		"matches": ["println"],
+	    		"message": "Debug?",
+	    		"check_caps": "true"
 	    	}
     	]
 	},
@@ -107,7 +72,7 @@
 	},
 
 	{
-    	"languages":["js", "php", "css"],
+    	"languages":["js", "php", "css", "java", "c"],
     	"rules":[
 	    	{
 	    		"matches": ["if(", "while(", "for(", "foreach("],
@@ -129,23 +94,6 @@
 	    		"regexes": ["[*a-z/i]{"],
 	    		"exceptions":["{$"],
 	    		"message": "Missing Space?"
-	    	},
-	    	{
-	    		"regexes": ["/\\/\\/\\S/"],
-	    		"message": "Comment Missing Space after slashes",
-	    		"exceptions": "http"
-	    	},
-	    	{
-	    		"regexes": ["/\\/\\/\\s[a-z]/"],
-	    		"message": "Comment first word should have uppercase letter"
-	    	},
-	    	{
-	    		"regexes": ["/[\\/][\\*][A-Z/i]/"],
-	    		"message": "Comment Missing Space after slash star (/*)"
-	    	},
-	    	{
-	    		"regexes": ["/\\s\\*\\@/"],
-	    		"message": "Missing space in docblock?"
 	    	}
     	]
 	}

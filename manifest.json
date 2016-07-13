@@ -1,7 +1,7 @@
 {
-    "name": "Git Helper",
-    "description": "Find issues in Git",
-    "version": "2.222",
+    "name": "Github Helper",
+    "description": "Find code problems in Github",
+    "version": "2.26",
     "permissions": [
         "activeTab",
         "storage",
@@ -13,7 +13,7 @@
         "persistent": false
     },
         "browser_action": {
-        "default_title": "Git Helper"
+        "default_title": "Github Helper"
     },
     "content_scripts": [
         {
