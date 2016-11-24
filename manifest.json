@@ -1,7 +1,7 @@
 {
     "name": "Github Helper: Code review tool",
     "description": "Help with finding common issues in code review on github",
-    "version": "12.26",
+    "version": "26",
     "permissions": [
         "activeTab",
         "storage",
