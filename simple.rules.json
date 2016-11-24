@@ -9,6 +9,17 @@
 	    	},{
 	    		"matches": ["<?= echo"],
 	    		"message": "'echo' not needed here"
+	    	},{
+	    		"matches": ["array("],
+                "exceptions":["_array"],
+	    		"message": "Can new array syntax be used here? ([])"
+	    	},{
+    	    		"regexes": ["[*a-z/i]{"],
+    	    		"exceptions":["{$"],
+    	    		"message": "Missing Space?"
+            },{
+	    		"regexes": ["<\\?=.*[A-Za-z0-9._+\\-\\'].*;.*\\?>"],
+	    		"message": "Is that semi-colon necessary?"
 	    	}
 
     	]
@@ -94,6 +105,15 @@
 	    		"regexes": ["[*a-z/i]{"],
 	    		"exceptions":["{$"],
 	    		"message": "Missing Space?"
+	    	},
+	    	{
+	    		"regexes": ["\"(.*)\""],
+	    		"exceptions":["{$", "=\"", "<?="],
+	    		"message": "Can single quotes be used here?"
+	    	},
+	    	{
+	    		"regexes": [".{120,}"],
+	    		"message": "Can this line be shortened?"
 	    	}
     	]
 	}
