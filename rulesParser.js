@@ -470,7 +470,6 @@ function showHideUI(){
     {
         $fileTypeElement = (elem).closest('.js-details-container').find('.file-header').find('.file-info');
         var fileName = $fileTypeElement.text();
-        console.log(fileName);
         var fileType = $.trim(fileName.split('.').pop());
         lineText = elem.text();
         if (lineText.indexOf('+')==0||lineText.indexOf('-')==0)
