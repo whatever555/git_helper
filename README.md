@@ -1,4 +1,5 @@
-# Github code review helper
+# Github code review helper  
+https://chrome.google.com/webstore/detail/aboioehhpmdocefcoofhpogffkdmdmga   
 Use github helper to help you with reviewing code.
 This tool can help find issues in your pull requests on github.  
 you can set custom rules in json for any language
